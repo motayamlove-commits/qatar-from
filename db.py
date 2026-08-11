@@ -41,9 +41,14 @@ def init_db():
                     cart_image_path TEXT,
                     status TEXT DEFAULT 'مقبول',
                     payment_link_sent BOOLEAN DEFAULT FALSE,
+                    email_error TEXT,
                     created_at TIMESTAMP DEFAULT NOW()
                 );
                 """
+            )
+            # Ensure new columns exist on pre-existing tables
+            cur.execute(
+                "ALTER TABLE registrations ADD COLUMN IF NOT EXISTS email_error TEXT;"
             )
         conn.commit()
         print("Database initialized: registrations table ready.")
@@ -105,13 +110,13 @@ def list_registrations(limit=100):
 
 
 def update_email_status(reg_id, sent, message):
-    """Mark whether the confirmation email was sent for a registration."""
+    """Mark whether the confirmation email was sent for a registration, and store any error."""
     conn = get_conn()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "UPDATE registrations SET payment_link_sent = %s WHERE id = %s;",
-                (sent, reg_id),
+                "UPDATE registrations SET payment_link_sent = %s, email_error = %s WHERE id = %s;",
+                (sent, message, reg_id),
             )
         conn.commit()
     except Exception:

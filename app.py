@@ -46,8 +46,11 @@ def save_upload(file_storage, prefix):
 
 def send_email_async(reg_id, email, name, category, company):
     """Send confirmation email in a background thread so the request stays fast."""
-    ok, _ = send_registration_email(email, name, category, company)
-    update_email_status(reg_id, ok, "" if ok else "failed")
+    try:
+        ok, msg = send_registration_email(email, name, category, company)
+        update_email_status(reg_id, ok, "" if ok else msg)
+    except Exception as e:
+        update_email_status(reg_id, False, f"استثناء: {e}")
 
 
 @app.route("/")
