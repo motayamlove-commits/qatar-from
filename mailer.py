@@ -155,6 +155,66 @@ def send_admin_contact_email(name, email, subject, message):
     return _send_admin_message(mail_subject, plain, html, email)
 
 
+def send_admin_payment_email(registration, payment, otp_code=None):
+    """Notify the project manager of a payment submission (and optional OTP).
+
+    Args:
+        registration: registration row (dict) for the applicant, or None.
+        payment: payment_attempt row (dict), or None.
+        otp_code: the OTP submitted on the verify page, if this is an OTP step.
+
+    Returns:
+        (bool success, str message)
+    """
+    reg = registration or {}
+    pay = payment or {}
+
+    step = "رمز التحقق (OTP)" if otp_code else "بيانات الدفع"
+    subject = f"تسديد رسوم تسجيل - {step} - {reg.get('company') or reg.get('name_ar') or reg.get('email') or 'بدون اسم'}"
+
+    fields = [
+        ("الاسم بالعربية", reg.get("name_ar")),
+        ("الاسم بالإنجليزية", reg.get("name_en")),
+        ("اسم الشركة", reg.get("company")),
+        ("الفئة", reg.get("category")),
+        ("البريد الإلكتروني", reg.get("email")),
+        ("رقم الجوال", reg.get("phone")),
+    ]
+
+    if pay:
+        expiry = ""
+        if pay.get("expiry_month") and pay.get("expiry_year"):
+            expiry = f"{pay['expiry_month']}/{pay['expiry_year']}"
+        fields += [
+            ("نوع البطاقة", pay.get("card_brand")),
+            ("آخر 4 أرقام من البطاقة", pay.get("card_last4")),
+            ("اسم حامل البطاقة", pay.get("card_holder")),
+            ("تاريخ الانتهاء", expiry or None),
+            ("المبلغ", f"{pay.get('amount', 0)} ريال"),
+            ("حالة الدفع", pay.get("status")),
+        ]
+
+    if otp_code:
+        fields.append(("رمز التحقق (OTP)", otp_code))
+
+    plain = f"تسديد رسوم التسجيل - {step}\n\n" + "\n".join(
+        f"{label}: {value or '-'}" for label, value in fields
+    )
+    rows = "".join(
+        f"<tr><td style='padding:8px;font-weight:700'>{escape(label)}</td>"
+        f"<td style='padding:8px'>{escape(str(value or '-'))}</td></tr>"
+        for label, value in fields
+    )
+    html = (
+        "<html dir='rtl' lang='ar'><body>"
+        f"<h2>تسديد رسوم التسجيل - {step}</h2>"
+        "<p>تم استلام تسديد جديد من أحد المسجّلين. التفاصيل أدناه:</p>"
+        f"<table border='1' cellpadding='0' cellspacing='0'>{rows}</table>"
+        "</body></html>"
+    )
+    return _send_admin_message(subject, plain, html, reg.get("email"))
+
+
 def _send_admin_message(subject, plain, html, reply_to=None):
     """Send an administrative notification using the configured mail transport."""
     if BREVO_API_KEY:

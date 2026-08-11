@@ -173,6 +173,20 @@ def list_registrations(limit=100):
         conn.close()
 
 
+def get_registration(reg_id):
+    """Return a single registration row by id, or None."""
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                "SELECT * FROM registrations WHERE id = %s;",
+                (reg_id,),
+            )
+            return cur.fetchone()
+    finally:
+        conn.close()
+
+
 def update_email_status(reg_id, sent, message):
     """Mark whether the confirmation email was sent for a registration, and store any error."""
     conn = get_conn()

