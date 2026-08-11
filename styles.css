@@ -16,7 +16,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;max-width:100%}
 body{
   font-family:'Tajawal',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   color:var(--text);
@@ -24,25 +24,14 @@ body{
   line-height:1.6;
   font-size:16px;
   overflow-x:hidden;
+  max-width:100vw;
+  -webkit-tap-highlight-color:transparent;
 }
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
 .container{max-width:var(--container);margin:0 auto;padding:0 24px;width:100%}
-
-/* App banner */
-.app-banner{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--primary);color:#fff;padding:10px 16px;gap:12px;
-}
-.app-banner__inner{display:flex;align-items:center;gap:12px}
-.app-banner__brand img{width:38px;height:38px;border-radius:8px}
-.app-banner__text{display:flex;flex-direction:column;line-height:1.3}
-.app-banner__text strong{font-weight:800;font-size:15px}
-.app-banner__text span{font-size:13px;opacity:.9}
-.app-banner__close{display:flex;align-items:center;justify-content:center;padding:4px;opacity:.9}
-.app-banner__close:hover{opacity:1}
 
 /* Header */
 .qntc-header{position:sticky;top:0;z-index:100;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
@@ -181,14 +170,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
 /* Registration form */
 .reg-section{margin-bottom:48px;background:var(--bg-cream);padding:40px;border-radius:12px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px}
-.form-field{display:flex;flex-direction:column;gap:8px}
-.form-field label{font-size:15px;font-weight:600;color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px}
+.form-field{display:flex;flex-direction:column;gap:6px;max-width:100%}
+.form-field label{font-size:14px;font-weight:600;color:var(--text)}
 .form-field .req{color:var(--maroon)}
 .form-field input,.form-field select{
-  padding:12px 14px;border:1px solid #d0d0d0;border-radius:6px;
-  font-size:15px;font-family:inherit;background:#fff;color:var(--text);
-  transition:.2s;
+  padding:10px 12px;border:1px solid #d0d0d0;border-radius:6px;
+  font-size:16px;font-family:inherit;background:#fff;color:var(--text);
+  transition:.2s;width:100%;max-width:100%;
 }
 .form-field input:focus,.form-field select:focus{
   outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,98,123,.12)
@@ -199,12 +188,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   padding:0;border:none;background:none;width:100%;
 }
 .file-upload__btn{
-  background:var(--primary);color:#fff;padding:10px 20px;border-radius:6px;
-  font-weight:600;pointer-events:none;
+  background:var(--primary);color:#fff;padding:9px 16px;border-radius:6px;
+  font-weight:600;pointer-events:none;font-size:14px;
 }
-.file-upload__hint{font-size:13px;color:var(--text-muted);max-width:60%}
+.file-upload__hint{font-size:12px;color:var(--text-muted);max-width:55%}
+.file-upload__preview{
+  display:none;align-items:center;gap:8px;margin-top:6px;
+  padding:8px 12px;border-radius:6px;background:#fff;border:1px solid #e0e0e0;
+  font-size:13px;max-width:100%;word-break:break-all;
+}
+.file-upload__preview.is-shown{display:flex}
+.file-upload__preview-name{font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.file-upload__preview-icon{flex:none;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.file-upload__preview-icon.is-ok{color:#2e7d32}
+.file-upload__preview-icon.is-err{color:#c62828}
 .reg-submit{
-  background:var(--primary);color:#fff;padding:14px 48px;
+  background:var(--primary);color:#fff;padding:13px 40px;
   font-size:16px;font-weight:700;border-radius:30px;margin-top:16px;
   transition:.2s;
 }
@@ -378,8 +377,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   .mega-card__img{display:none}
   .qntc-nav__search{width:100%;justify-content:flex-start;padding:16px 20px;border-radius:0;border-bottom:1px solid #f0f0f0}
   .qntc-header__lang{order:3}
-  .form-row{grid-template-columns:1fr;gap:16px;margin-bottom:16px}
-  .reg-section{padding:24px}
+  .form-row{grid-template-columns:1fr;gap:14px;margin-bottom:14px}
+  .reg-section{padding:20px}
+  .form-field input,.form-field select{padding:9px 10px;font-size:16px}
+  .file-upload__btn{padding:8px 14px;font-size:13px}
+  .file-upload__hint{max-width:100%;font-size:11px}
+  .reg-submit{padding:12px 32px;font-size:15px}
   .events-list{grid-template-columns:1fr}
   .quick-access__grid{grid-template-columns:1fr 1fr}
   .hero{min-height:420px}
@@ -392,6 +395,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   .main-content,.breadcrumb,.hero__content,.gallery,.quick-access,.be-intro,.be-features{padding-left:16px;padding-right:16px}
   .event-details__grid,.quick-access__grid,.events-list,.mega-menu__grid,.be-intro__grid,.be-features__grid{grid-template-columns:1fr}
   .file-upload__hint{max-width:100%}
+  .file-upload__preview{max-width:100%;font-size:12px}
   .cookie{right:8px;left:8px;bottom:8px}
   .qntc-footer__cols{grid-template-columns:1fr;gap:24px}
   .qntc-footer__top{flex-direction:column;gap:24px}

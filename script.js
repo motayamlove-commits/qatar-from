@@ -1,8 +1,3 @@
-// App banner close
-document.getElementById('appBannerClose')?.addEventListener('click', () => {
-  document.getElementById('appBanner').style.display = 'none';
-});
-
 // Mobile nav toggle
 const burger = document.getElementById('burgerBtn');
 const nav = document.getElementById('mainNav');
@@ -103,6 +98,7 @@ document.getElementById('regForm')?.addEventListener('submit', async (e) => {
         success.hidden = false;
       }
       form.reset();
+      document.querySelectorAll('.file-upload__preview.is-shown').forEach(p => p.classList.remove('is-shown'));
       form.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(() => { if (success) success.hidden = true; }, 6000);
     } else {
@@ -130,6 +126,37 @@ if (cookie && !localStorage.getItem('cookieConsent')) {
 } else if (cookie) {
   cookie.classList.add('is-hidden');
 }
+
+// File upload preview: show filename + accept/reject icon
+const OK_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ERR_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>';
+const MAX_BYTES = 10 * 1024 * 1024;
+
+document.querySelectorAll('input[type="file"]').forEach(input => {
+  input.addEventListener('change', () => {
+    const preview = input.closest('.form-field')?.querySelector('.file-upload__preview');
+    if (!preview) return;
+    const nameEl = preview.querySelector('.file-upload__preview-name');
+    const iconEl = preview.querySelector('.file-upload__preview-icon');
+
+    if (!input.files || !input.files[0]) {
+      preview.classList.remove('is-shown');
+      return;
+    }
+    const file = input.files[0];
+    const allowed = (input.getAttribute('accept') || '').split(',').map(s => s.trim().toLowerCase());
+    const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+    const extOk = !allowed.length || allowed.includes(ext);
+    const sizeOk = file.size <= MAX_BYTES;
+    const accepted = extOk && sizeOk;
+
+    nameEl.textContent = file.name;
+    iconEl.innerHTML = accepted ? OK_SVG : ERR_SVG;
+    iconEl.classList.toggle('is-ok', accepted);
+    iconEl.classList.toggle('is-err', !accepted);
+    preview.classList.add('is-shown');
+  });
+});
 
 // Back to top
 const backToTop = document.querySelector('.back-to-top');

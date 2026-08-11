@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>مهرجان قطر الدولي للأغذية | قطر للسياحة</title>
   <meta name="description" content="مهرجان قطر الدولي للأغذية هو مبادرة قطرية أطلقتها Visit Qatar احتفاءً بالعروض المتنوعة التي تقدمها قطر في قطاعات الأطعمة، والمشروبات، والضيافة." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,22 +11,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Top notice bar -->
-  <div class="app-banner" id="appBanner">
-    <div class="app-banner__inner">
-      <div class="app-banner__brand">
-        <img src="assets/appicon.png" alt="تطبيق زوروا قطر" onerror="this.style.display='none'" />
-      </div>
-      <div class="app-banner__text">
-        <strong>تطبيق زوروا قطر</strong>
-        <span>استكشف الأنشطة في قطر. حمّل الأن</span>
-      </div>
-    </div>
-    <button class="app-banner__close" id="appBannerClose" aria-label="إغلاق الإشعارات">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-  </div>
-
   <!-- Header -->
   <header class="qntc-header" id="top">
     <div class="qntc-header__topbar">
@@ -235,19 +219,19 @@
                   <p>استكشف الفرص وتواصل مع قادة الصناعة وكن في الطليعة من خلال رزنامتنا الشاملة لفعاليات الأعمال.</p>
                 </div>
               </a>
-              <a class="mega-card" href="#">
+              <a class="mega-card" href="why-qatar.html">
                 <div class="mega-card__body">
                   <h3>لماذا تُعد قطر الوجهة المثالية</h3>
                   <p>فيما يلي بعض الأسباب المقنعة التي تجعل من قطر الوجهة الأفضل لتنظيم اجتماعات الأعمال والشركات. خطط لفعالياتك بثقة.</p>
                 </div>
               </a>
-              <a class="mega-card" href="#">
+              <a class="mega-card" href="plan-your-event.html">
                 <div class="mega-card__body">
                   <h3>خطط لفعاليتك</h3>
                   <p>اصنع تجارب لا تُنسى مع فعاليات الأعمال التي تنظمها قطر للسياحة. خطط لفعاليتك القادمة بدقة وفخامة في كل التفاصيل في دولة قطر.</p>
                 </div>
               </a>
-              <a class="mega-card" href="#">
+              <a class="mega-card" href="events-submission.html">
                 <div class="mega-card__body">
                   <h3>اعرض فعالياتك</h3>
                   <p>يمكنك نشر فعالياتك وعروضك ومهرجاناتك على منصة قطر الشاملة التي تجمع كل الفعاليات والمهرجانات وغيرها الكثير.</p>
@@ -318,10 +302,10 @@
           </div>
         </li>
         <li class="qntc-nav__item">
-          <a class="qntc-nav__link" href="#">الشراكات بين القطاعين العام والخاص</a>
+          <a class="qntc-nav__link" href="public-private-partnerships.html">الشراكات بين القطاعين العام والخاص</a>
         </li>
         <li class="qntc-nav__item">
-          <a class="qntc-nav__link" href="#">مذاق قطر</a>
+          <a class="qntc-nav__link" href="taste-of-qatar.html">مذاق قطر</a>
         </li>
       </ul>
       <button class="qntc-nav__search" id="searchBtn" aria-label="بحث">
@@ -455,6 +439,10 @@
             <span class="file-upload__hint">يجب أن يكون حجم الملف أقل من 10 ميجابايت. أنواع الملفات المسموح بها: PNG JPG PDF</span>
             <span class="file-upload__btn">تصفّح</span>
           </div>
+          <div class="file-upload__preview" data-for="docs">
+            <span class="file-upload__preview-icon"></span>
+            <span class="file-upload__preview-name"></span>
+          </div>
         </div>
 
         <div class="form-row">
@@ -488,6 +476,10 @@
             <input type="file" name="cart_image" accept=".jpg,.png" />
             <span class="file-upload__hint">يجب أن يكون حجم الملف أقل من 10 ميجابايت. أنواع الملفات المسموح بها: JPG PNG</span>
             <span class="file-upload__btn">تصفّح</span>
+          </div>
+          <div class="file-upload__preview" data-for="cart_image">
+            <span class="file-upload__preview-icon"></span>
+            <span class="file-upload__preview-name"></span>
           </div>
         </div>
 
@@ -529,19 +521,19 @@
   <section class="quick-access container">
     <h2 class="section-title">الوصول السريع</h2>
     <div class="quick-access__grid">
-      <a class="quick-card" href="#">
+      <a class="quick-card" href="about-us.html">
         <h3>نبذة عنّا</h3>
         <span>اقرأ المزيد</span>
       </a>
-      <a class="quick-card" href="#">
+      <a class="quick-card" href="business-events.html">
         <h3>معالم الجذب البارزة</h3>
         <span>اقرأ المزيد</span>
       </a>
-      <a class="quick-card" href="#">
+      <a class="quick-card" href="contact-us.html">
         <h3>الخريطة</h3>
         <span>اقرأ المزيد</span>
       </a>
-      <a class="quick-card" href="#">
+      <a class="quick-card" href="calendar.html">
         <h3>الفعاليات</h3>
         <span>اقرأ المزيد</span>
       </a>
@@ -568,21 +560,21 @@
         <div class="qntc-footer__col">
           <h4>الاتصال</h4>
           <ul>
-            <li><a href="#">تواصل معنا</a></li>
-            <li><a href="#">الإعلام والصحافة</a></li>
-            <li><a href="#">منظِّمو الرحلات</a></li>
+            <li><a href="contact-us.html">تواصل معنا</a></li>
+            <li><a href="news-and-media.html">الإعلام والصحافة</a></li>
+            <li><a href="business-events.html">منظِّمو الرحلات</a></li>
           </ul>
         </div>
         <div class="qntc-footer__col">
           <h4>معلومات</h4>
           <ul>
-            <li><a href="#">نبذة عن قطر للسياحة</a></li>
+            <li><a href="about-us.html">نبذة عن قطر للسياحة</a></li>
             <li><a href="https://www.visitqatar.com" target="_blank" rel="noopener">Visitqatar.com</a></li>
-            <li><a href="#">سياسة الخصوصية والأمن</a></li>
-            <li><a href="#">سياسة ملفات تعريف الارتباط</a></li>
-            <li><a href="#">إعدادات ملفات تعريف الارتباط</a></li>
-            <li><a href="#">شعارات العلامة التجارية قطر للسياحة</a></li>
-            <li><a href="#">إعدادات ملفات تعريف الارتباط</a></li>
+            <li><a href="privacy-policy.html">سياسة الخصوصية والأمن</a></li>
+            <li><a href="cookie-policy.html">سياسة ملفات تعريف الارتباط</a></li>
+            <li><a href="cookie-policy.html">إعدادات ملفات تعريف الارتباط</a></li>
+            <li><a href="business-events.html">شعارات العلامة التجارية قطر للسياحة</a></li>
+            <li><a href="cookie-policy.html">إعدادات ملفات تعريف الارتباط</a></li>
           </ul>
         </div>
       </div>
@@ -597,7 +589,7 @@
   <div class="cookie" id="cookie">
     <div class="cookie__text">
       <p>نستخدم ملفات تعريف الارتباط لتخصيص تجربتك وفق احتياجاتك، لنقدم لك عروضاً خاصة وميزات فريدة وأكثر من ذلك. عند اختيار "قبول الكل" فإنك توافق على استخدام ملفات تعريف الارتباط. يمكنك تغيير تفضيلاتك في أي وقت عبر رابط "موافقة ملفات تعريف الارتباط" في التذييل.</p>
-      <a href="#" class="cookie__link">سياسة الخصوصية</a>
+      <a href="privacy-policy.html" class="cookie__link">سياسة الخصوصية</a>
     </div>
     <div class="cookie__btns">
       <button class="cookie__btn cookie__btn--all" id="cookieAcceptAll">قبول الكل</button>
