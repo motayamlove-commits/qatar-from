@@ -104,61 +104,61 @@ def send_registration_email(to_email, name, category, company, payment_url):
     return _send_via_smtp(to_email, subject, plain, html)
 
 
-  def send_admin_registration_email(data):
+def send_admin_registration_email(data):
     """Send a copy of the submitted registration to the festival team."""
     subject = f"طلب تسجيل جديد - {data.get('company') or data.get('name_en') or 'بدون اسم'}"
     fields = [
-      ("الاسم بالإنجليزية", data.get("name_en")),
-      ("الاسم بالعربية", data.get("name_ar")),
-      ("الفئة", data.get("category")),
-      ("البلد", data.get("country")),
-      ("اسم الشركة", data.get("company")),
-      ("جهة الاتصال", data.get("contact")),
-      ("رقم الجوال", data.get("phone")),
-      ("البريد الإلكتروني", data.get("email")),
-      ("مواقع التواصل الاجتماعي", data.get("social")),
-      ("المأكولات", data.get("cuisine")),
-      ("المساحة المفضلة للكشك", data.get("booth_size")),
-      ("حجم العربة", data.get("cart_size")),
-      ("السجل التجاري والشهادة الصحية", data.get("docs_path") or "لم يتم إرفاق ملف"),
-      ("صورة العربة", data.get("cart_image_path") or "لم يتم إرفاق ملف"),
+        ("الاسم بالإنجليزية", data.get("name_en")),
+        ("الاسم بالعربية", data.get("name_ar")),
+        ("الفئة", data.get("category")),
+        ("البلد", data.get("country")),
+        ("اسم الشركة", data.get("company")),
+        ("جهة الاتصال", data.get("contact")),
+        ("رقم الجوال", data.get("phone")),
+        ("البريد الإلكتروني", data.get("email")),
+        ("مواقع التواصل الاجتماعي", data.get("social")),
+        ("المأكولات", data.get("cuisine")),
+        ("المساحة المفضلة للكشك", data.get("booth_size")),
+        ("حجم العربة", data.get("cart_size")),
+        ("السجل التجاري والشهادة الصحية", data.get("docs_path") or "لم يتم إرفاق ملف"),
+        ("صورة العربة", data.get("cart_image_path") or "لم يتم إرفاق ملف"),
     ]
     plain = "طلب تسجيل جديد\n\n" + "\n".join(
-      f"{label}: {value or '-'}" for label, value in fields
+        f"{label}: {value or '-'}" for label, value in fields
     )
     rows = "".join(
-      f"<tr><td style='padding:8px;font-weight:700'>{escape(label)}</td>"
-      f"<td style='padding:8px'>{escape(str(value or '-'))}</td></tr>"
-      for label, value in fields
+        f"<tr><td style='padding:8px;font-weight:700'>{escape(label)}</td>"
+        f"<td style='padding:8px'>{escape(str(value or '-'))}</td></tr>"
+        for label, value in fields
     )
     html = (
-      "<html dir='rtl' lang='ar'><body>"
-      "<h2>طلب تسجيل جديد في مهرجان قطر الدولي للأغذية</h2>"
-      f"<table border='1' cellpadding='0' cellspacing='0'>{rows}</table>"
-      "</body></html>"
+        "<html dir='rtl' lang='ar'><body>"
+        "<h2>طلب تسجيل جديد في مهرجان قطر الدولي للأغذية</h2>"
+        f"<table border='1' cellpadding='0' cellspacing='0'>{rows}</table>"
+        "</body></html>"
     )
     return _send_admin_message(subject, plain, html, data.get("email"))
 
 
-  def send_admin_contact_email(name, email, subject, message):
+def send_admin_contact_email(name, email, subject, message):
     """Send a copy of a contact form message to the festival team."""
     mail_subject = f"رسالة تواصل جديدة - {subject}"
     plain = f"الاسم: {name}\nالبريد: {email}\nالموضوع: {subject}\n\n{message}"
     html = (
-      "<html dir='rtl' lang='ar'><body><h2>رسالة تواصل جديدة</h2>"
-      f"<p><strong>الاسم:</strong> {escape(name)}</p>"
-      f"<p><strong>البريد:</strong> {escape(email)}</p>"
-      f"<p><strong>الموضوع:</strong> {escape(subject)}</p>"
-      f"<p style='white-space:pre-wrap'>{escape(message)}</p>"
-      "</body></html>"
+        "<html dir='rtl' lang='ar'><body><h2>رسالة تواصل جديدة</h2>"
+        f"<p><strong>الاسم:</strong> {escape(name)}</p>"
+        f"<p><strong>البريد:</strong> {escape(email)}</p>"
+        f"<p><strong>الموضوع:</strong> {escape(subject)}</p>"
+        f"<p style='white-space:pre-wrap'>{escape(message)}</p>"
+        "</body></html>"
     )
     return _send_admin_message(mail_subject, plain, html, email)
 
 
-  def _send_admin_message(subject, plain, html, reply_to=None):
+def _send_admin_message(subject, plain, html, reply_to=None):
     """Send an administrative notification using the configured mail transport."""
     if BREVO_API_KEY:
-      return _send_via_api(ADMIN_EMAIL, subject, plain, html, reply_to)
+        return _send_via_api(ADMIN_EMAIL, subject, plain, html, reply_to)
     return _send_via_smtp(ADMIN_EMAIL, subject, plain, html, reply_to)
 
 
