@@ -5,11 +5,12 @@
 - GET /api/registrations: list saved records
 """
 import os
+import threading
 from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
-from db import init_db, insert_registration, list_registrations
+from db import init_db, insert_registration, list_registrations, update_email_status
 from mailer import send_registration_email
 
 load_dotenv()
@@ -41,6 +42,12 @@ def save_upload(file_storage, prefix):
     path = os.path.join(UPLOAD_DIR, unique)
     file_storage.save(path)
     return unique
+
+
+def send_email_async(reg_id, email, name, category, company):
+    """Send confirmation email in a background thread so the request stays fast."""
+    ok, _ = send_registration_email(email, name, category, company)
+    update_email_status(reg_id, ok, "" if ok else "failed")
 
 
 @app.route("/")
@@ -92,21 +99,18 @@ def register():
         if not reg_id:
             return jsonify({"ok": False, "error": "فشل حفظ البيانات في قاعدة البيانات"}), 500
 
-        # Send email
+        # Send email in background (keeps the response fast)
         display_name = data["name_ar"] or data["name_en"]
-        ok, mail_msg = send_registration_email(
-            to_email=data["email"],
-            name=display_name,
-            category=data["category"],
-            company=data["company"],
-        )
+        threading.Thread(
+            target=send_email_async,
+            args=(reg_id, data["email"], display_name, data["category"], data["company"]),
+            daemon=True,
+        ).start()
 
         return jsonify({
             "ok": True,
             "id": reg_id,
-            "email_sent": ok,
-            "email_message": mail_msg,
-            "message": "تم استلام طلبك بنجاح." + (" تم إرسال بريد التأكيد." if ok else ""),
+            "message": "تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات.",
         })
 
     except Exception as e:

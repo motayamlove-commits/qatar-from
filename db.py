@@ -104,5 +104,21 @@ def list_registrations(limit=100):
         conn.close()
 
 
+def update_email_status(reg_id, sent, message):
+    """Mark whether the confirmation email was sent for a registration."""
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE registrations SET payment_link_sent = %s WHERE id = %s;",
+                (sent, reg_id),
+            )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        conn.close()
+
+
 if __name__ == "__main__":
     init_db()

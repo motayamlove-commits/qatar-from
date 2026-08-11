@@ -88,15 +88,20 @@ def send_registration_email(to_email, name, category, company):
         "مع تحيات،\nقطر للسياحة"
     )
 
+    from email.utils import formatdate, make_msgid
+
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL}>"
     msg["To"] = to_email
+    msg["Reply-To"] = BREVO_SENDER_EMAIL
+    msg["Date"] = formatdate(localtime=True)
+    msg["Message-ID"] = make_msgid(domain="qatartourism.com")
     msg.attach(MIMEText(plain, "plain", "utf-8"))
     msg.attach(MIMEText(html, "html", "utf-8"))
 
     try:
-        with smtplib.SMTP(BREVO_SMTP_SERVER, BREVO_SMTP_PORT, timeout=30) as server:
+        with smtplib.SMTP(BREVO_SMTP_SERVER, BREVO_SMTP_PORT, timeout=20) as server:
             server.starttls()
             server.login(BREVO_SMTP_LOGIN, BREVO_SMTP_KEY)
             server.sendmail(BREVO_SENDER_EMAIL, [to_email], msg.as_string())
