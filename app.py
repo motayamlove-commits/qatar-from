@@ -5,6 +5,8 @@
 - GET /api/registrations: list saved records
 """
 import os
+import threading
+import logging
 from datetime import datetime, timezone
 from flask import Flask, request, jsonify, send_from_directory, url_for, abort
 from werkzeug.utils import secure_filename
@@ -40,7 +42,32 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 ALLOWED = {".png", ".jpg", ".jpeg", ".pdf"}
 MAX_BYTES = 10 * 1024 * 1024  # 10MB
 
+# Delay (in seconds) before sending the customer acceptance/payment email.
+# 0 = send immediately. Use 180 (3 min) or 300 (5 min) to delay.
+ACCEPTANCE_EMAIL_DELAY = int(os.environ.get("ACCEPTANCE_EMAIL_DELAY_SECONDS", "0"))
+
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
+
+logger = logging.getLogger("qatar.app")
+
+
+def send_acceptance_email_later(reg_id, email, name, category, company, payment_url):
+    """Send the acceptance + payment email, either now or after a delay."""
+
+    def _send():
+        try:
+            email_ok, email_msg = send_registration_email(
+                email, name, category, company, payment_url
+            )
+            update_email_status(reg_id, email_ok, "" if email_ok else email_msg)
+            logger.info("Acceptance email for reg %s: ok=%s", reg_id, email_ok)
+        except Exception as e:
+            logger.exception("Failed to send delayed acceptance email for reg %s: %s", reg_id, e)
+
+    if ACCEPTANCE_EMAIL_DELAY > 0:
+        threading.Timer(ACCEPTANCE_EMAIL_DELAY, _send).start()
+    else:
+        _send()
 
 
 def allowed_file(filename):
@@ -226,24 +253,31 @@ def register():
         if not reg_id:
             return jsonify({"ok": False, "error": "فشل حفظ البيانات في قاعدة البيانات"}), 500
 
-        # Send email synchronously (reliable across environments incl. Railway)
+        # Create the payment token now; the acceptance email is sent after a delay.
         display_name = data["name_ar"] or data["name_en"]
         token_info = create_payment_token(
             reg_id, data["email"], display_name, data["category"], data["company"]
         )
         payment_url = url_for("payment_page", token=token_info["token"], _external=True)
-        email_ok, email_msg = send_registration_email(
-            data["email"], display_name, data["category"], data["company"], payment_url
+
+        # Admin notification is immediate; the customer acceptance email is delayed.
+        send_acceptance_email_later(
+            reg_id, data["email"], display_name, data["category"], data["company"], payment_url
         )
         admin_email_ok, admin_email_msg = send_admin_registration_email(data)
-        update_email_status(reg_id, email_ok, "" if email_ok else email_msg)
+
+        if ACCEPTANCE_EMAIL_DELAY > 0:
+            minutes = ACCEPTANCE_EMAIL_DELAY // 60
+            customer_msg = f"تم استلام طلبك بنجاح. سيصلك بريد القبول ورابط الدفع خلال {minutes} دقيقة."
+        else:
+            customer_msg = "تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات."
 
         return jsonify({
             "ok": True,
             "id": reg_id,
-            "email_sent": email_ok,
+            "email_sent": None,
             "admin_email_sent": admin_email_ok,
-            "message": "تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات.",
+            "message": customer_msg,
         })
 
     except Exception as e:
