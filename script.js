@@ -80,14 +80,39 @@ if (track && dotsContainer) {
   });
 }
 
-// Form submit
-document.getElementById('regForm')?.addEventListener('submit', (e) => {
+// Form submit -> POST /api/register (saves to DB + sends email)
+document.getElementById('regForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('.reg-submit');
   const success = document.getElementById('formSuccess');
-  if (success) {
-    success.hidden = false;
-    e.target.scrollIntoView({behavior:'smooth', block:'center'});
-    setTimeout(() => success.hidden = true, 4000);
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الإرسال...';
+
+  const formData = new FormData(form);
+  try {
+    const resp = await fetch('/api/register', { method: 'POST', body: formData });
+    const data = await resp.json();
+    if (data.ok) {
+      if (success) {
+        const note = data.email_sent
+          ? 'تم استلام طلبك بنجاح. تم إرسال بريد التأكيد إلى عنوانك.'
+          : 'تم استلام طلبك بنجاح. (سيصلك بريد التأكيد قريباً)';
+        success.textContent = note;
+        success.hidden = false;
+      }
+      form.reset();
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { if (success) success.hidden = true; }, 6000);
+    } else {
+      alert('حدث خطأ: ' + (data.error || 'تعذر إرسال الطلب'));
+    }
+  } catch (err) {
+    alert('تعذر الاتصال بالخادم: ' + err);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
   }
 });
 
