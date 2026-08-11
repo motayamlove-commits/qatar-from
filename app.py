@@ -102,17 +102,17 @@ def register():
         if not reg_id:
             return jsonify({"ok": False, "error": "فشل حفظ البيانات في قاعدة البيانات"}), 500
 
-        # Send email in background (keeps the response fast)
+        # Send email synchronously (reliable across environments incl. Railway)
         display_name = data["name_ar"] or data["name_en"]
-        threading.Thread(
-            target=send_email_async,
-            args=(reg_id, data["email"], display_name, data["category"], data["company"]),
-            daemon=True,
-        ).start()
+        email_ok, email_msg = send_registration_email(
+            data["email"], display_name, data["category"], data["company"]
+        )
+        update_email_status(reg_id, email_ok, "" if email_ok else email_msg)
 
         return jsonify({
             "ok": True,
             "id": reg_id,
+            "email_sent": email_ok,
             "message": "تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات.",
         })
 

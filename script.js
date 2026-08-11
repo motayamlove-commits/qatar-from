@@ -96,7 +96,10 @@ document.getElementById('regForm')?.addEventListener('submit', async (e) => {
     const data = await resp.json();
     if (data.ok) {
       if (success) {
-        success.textContent = data.message || 'تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات.';
+        const note = data.email_sent
+          ? 'تم استلام طلبك بنجاح. تم إرسال بريد التأكيد إلى عنوانك.'
+          : 'تم استلام طلبك بنجاح. (تعذّر إرسال بريد التأكيد تلقائياً، سنتواصل معك قريباً)';
+        success.textContent = note;
         success.hidden = false;
       }
       form.reset();
