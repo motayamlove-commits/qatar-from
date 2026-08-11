@@ -23,7 +23,7 @@ BREVO_SENDER_NAME = os.environ.get("BREVO_SENDER_NAME", "قطر للسياحة")
 
 
 def send_registration_email(to_email, name, category, company, payment_url):
-  """Send an acceptance email with the configured payment link.
+    """Send an acceptance email with the configured payment link.
 
     Args:
         to_email: recipient email
