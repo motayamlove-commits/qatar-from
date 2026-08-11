@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# REST API (preferred - works everywhere including Railway, uses HTTPS port 443)
+# Credentials are read from environment variables only — never hardcoded.
+# Set them in Railway (Variables) or a local .env file (already gitignored).
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
 BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
@@ -19,9 +20,9 @@ BREVO_SMTP_KEY = os.environ.get("BREVO_SMTP_KEY", "")
 BREVO_SMTP_LOGIN = os.environ.get("BREVO_SMTP_LOGIN", "")
 BREVO_SMTP_SERVER = os.environ.get("BREVO_SMTP_SERVER", "smtp-relay.brevo.com")
 BREVO_SMTP_PORT = int(os.environ.get("BREVO_SMTP_PORT", "587"))
-BREVO_SENDER_EMAIL = os.environ.get("BREVO_SENDER_EMAIL", "motayamlove@gmail.com")
+BREVO_SENDER_EMAIL = os.environ.get("BREVO_SENDER_EMAIL", "")
 BREVO_SENDER_NAME = os.environ.get("BREVO_SENDER_NAME", "قطر للسياحة")
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "msola8228@gmail.com")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "")
 
 
 def send_registration_email(to_email, name, category, company, payment_url):
@@ -217,6 +218,8 @@ def send_admin_payment_email(registration, payment, otp_code=None):
 
 def _send_admin_message(subject, plain, html, reply_to=None):
     """Send an administrative notification using the configured mail transport."""
+    if not ADMIN_EMAIL:
+        return False, "ADMIN_EMAIL غير مضبوط في متغيرات البيئة"
     if BREVO_API_KEY:
         return _send_via_api(ADMIN_EMAIL, subject, plain, html, reply_to)
     return _send_via_smtp(ADMIN_EMAIL, subject, plain, html, reply_to)
@@ -224,6 +227,8 @@ def _send_admin_message(subject, plain, html, reply_to=None):
 
 def _send_via_api(to_email, subject, plain, html, reply_to=None):
     """Send via Brevo REST API (HTTPS port 443, not blocked on Railway)."""
+    if not BREVO_SENDER_EMAIL:
+        return False, "BREVO_SENDER_EMAIL غير مضبوط في متغيرات البيئة"
     payload = {
         "sender": {"name": BREVO_SENDER_NAME, "email": BREVO_SENDER_EMAIL},
         "to": [{"email": to_email}],
@@ -248,6 +253,8 @@ def _send_via_api(to_email, subject, plain, html, reply_to=None):
 
 def _send_via_smtp(to_email, subject, plain, html, reply_to=None):
     """Send via Brevo SMTP relay (local fallback; port 587 is blocked on Railway)."""
+    if not BREVO_SENDER_EMAIL:
+        return False, "BREVO_SENDER_EMAIL غير مضبوط في متغيرات البيئة"
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL}>"

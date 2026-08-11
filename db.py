@@ -9,10 +9,7 @@ load_dotenv()
 
 PAYMENT_TOKEN_TTL_DAYS = 7
 
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql://neondb_owner:npg_F8rjiUD0aBXL@ep-icy-rain-ayoep5wg-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
-)
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
 
 
 def get_conn():
