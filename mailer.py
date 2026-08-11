@@ -154,6 +154,6 @@ if __name__ == "__main__":
       "اسم تجريبي",
       "محلي",
       "شركة تجريبية",
-      "http://127.0.0.1:12000/%D9%85%D9%84%D9%81%D8%A7%D8%AA%20%D9%8A%D8%AC%D8%A8%20%D8%B1%D8%A8%D8%B7%D9%87%D8%A7/paymnt.html",
+      "http://127.0.0.1:12000/pay/example-test-token",
     )
     print(ok, msg)

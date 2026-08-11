@@ -1,10 +1,13 @@
 """Database management for registration records."""
 import os
+import secrets
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
 load_dotenv()
+
+PAYMENT_TOKEN_TTL_DAYS = 7
 
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
@@ -49,6 +52,28 @@ def init_db():
             # Ensure new columns exist on pre-existing tables
             cur.execute(
                 "ALTER TABLE registrations ADD COLUMN IF NOT EXISTS email_error TEXT;"
+            )
+
+            # Per-customer payment tokens (unique, expire after 7 days)
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS payment_tokens (
+                    id SERIAL PRIMARY KEY,
+                    token TEXT UNIQUE NOT NULL,
+                    registration_id INTEGER REFERENCES registrations(id) ON DELETE CASCADE,
+                    email TEXT,
+                    name TEXT,
+                    category TEXT,
+                    company TEXT,
+                    created_at TIMESTAMPTZ DEFAULT NOW(),
+                    expires_at TIMESTAMPTZ NOT NULL,
+                    revoked BOOLEAN DEFAULT FALSE,
+                    attempts INTEGER DEFAULT 0
+                );
+                """
+            )
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_payment_tokens_token ON payment_tokens (token);"
             )
         conn.commit()
         print("Database initialized: registrations table ready.")
@@ -117,6 +142,63 @@ def update_email_status(reg_id, sent, message):
             cur.execute(
                 "UPDATE registrations SET payment_link_sent = %s, email_error = %s WHERE id = %s;",
                 (sent, message, reg_id),
+            )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        conn.close()
+
+
+def create_payment_token(reg_id, email, name, category, company):
+    """Create a unique, time-limited payment token for one registration."""
+    token = secrets.token_urlsafe(32)
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                INSERT INTO payment_tokens
+                    (token, registration_id, email, name, category, company, expires_at)
+                VALUES (%s, %s, %s, %s, %s, %s,
+                        NOW() + (%s || ' days')::INTERVAL)
+                RETURNING token, expires_at;
+                """,
+                (token, reg_id, email, name, category, company, str(PAYMENT_TOKEN_TTL_DAYS)),
+            )
+            row = cur.fetchone()
+        conn.commit()
+        return {"token": row["token"], "expires_at": row["expires_at"]}
+    finally:
+        conn.close()
+
+
+def get_payment_token(token):
+    """Return the token row if it exists, or None. Expiry/revoked checked by caller."""
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT id, registration_id, email, name, category, company,
+                       created_at, expires_at, revoked, attempts
+                FROM payment_tokens WHERE token = %s;
+                """,
+                (token,),
+            )
+            return cur.fetchone()
+    finally:
+        conn.close()
+
+
+def increment_payment_attempt(token_id):
+    """Record one more payment attempt for a token (retries are allowed)."""
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE payment_tokens SET attempts = attempts + 1 WHERE id = %s;",
+                (token_id,),
             )
         conn.commit()
     except Exception:

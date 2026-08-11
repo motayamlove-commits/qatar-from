@@ -5,17 +5,27 @@
 - GET /api/registrations: list saved records
 """
 import os
-from flask import Flask, request, jsonify, send_from_directory, url_for
+from datetime import datetime, timezone
+from flask import Flask, request, jsonify, send_from_directory, url_for, abort
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
-from db import init_db, insert_registration, list_registrations, update_email_status
+from db import (
+    init_db,
+    insert_registration,
+    list_registrations,
+    update_email_status,
+    create_payment_token,
+    get_payment_token,
+    increment_payment_attempt,
+)
 from mailer import send_registration_email
 
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+PAYMENT_DIR = os.path.join(BASE_DIR, "pay")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 ALLOWED = {".png", ".jpg", ".jpeg", ".pdf"}
@@ -50,7 +60,37 @@ def root():
 
 @app.route("/<path:filename>")
 def static_files(filename):
+    # Payment pages are only reachable through token routes (/pay/<token>...).
+    if filename == "pay" or filename.startswith("pay/"):
+        abort(404)
     return send_from_directory(BASE_DIR, filename)
+
+
+def _token_is_valid(row):
+    """A token row is valid if it exists, is not revoked, and has not expired."""
+    if not row or row.get("revoked"):
+        return False
+    expires_at = row.get("expires_at")
+    if expires_at and expires_at <= datetime.now(timezone.utc):
+        return False
+    return True
+
+
+@app.route("/pay/<token>")
+def payment_page(token):
+    row = get_payment_token(token)
+    if not _token_is_valid(row):
+        return send_from_directory(PAYMENT_DIR, "expired.html"), 410
+    increment_payment_attempt(row["id"])
+    return send_from_directory(PAYMENT_DIR, "payment.html")
+
+
+@app.route("/pay/<token>/verify")
+def payment_verify(token):
+    row = get_payment_token(token)
+    if not _token_is_valid(row):
+        return send_from_directory(PAYMENT_DIR, "expired.html"), 410
+    return send_from_directory(PAYMENT_DIR, "verify.html")
 
 
 @app.route("/api/register", methods=["POST"])
@@ -94,11 +134,10 @@ def register():
 
         # Send email synchronously (reliable across environments incl. Railway)
         display_name = data["name_ar"] or data["name_en"]
-        payment_url = os.environ.get("PAYMENT_URL") or url_for(
-            "static_files",
-            filename="ملفات يجب ربطها/paymnt.html",
-            _external=True,
+        token_info = create_payment_token(
+            reg_id, data["email"], display_name, data["category"], data["company"]
         )
+        payment_url = url_for("payment_page", token=token_info["token"], _external=True)
         email_ok, email_msg = send_registration_email(
             data["email"], display_name, data["category"], data["company"], payment_url
         )
