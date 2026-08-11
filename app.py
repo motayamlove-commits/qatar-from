@@ -2,6 +2,7 @@
 
 - Serves the static website (HTML/CSS/JS/assets)
 - Handles POST /api/register: saves to PostgreSQL, uploads files, emails applicant
+- Handles payment (POST /api/pay/<token>) and OTP (POST /api/pay/<token>/verify)
 - GET /api/registrations: list saved records
 """
 import os

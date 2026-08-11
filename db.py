@@ -1,4 +1,4 @@
-"""Database management for registration records."""
+"""Database management for registration, payment, and OTP records."""
 import os
 import secrets
 import psycopg2
@@ -17,7 +17,9 @@ def get_conn():
 
 
 def init_db():
-    """Create the registrations table if it doesn't exist."""
+    """Create the registrations, payment_tokens, payment_attempts, and
+    otp_attempts tables (and indexes) if they don't exist, and add any
+    columns added in later versions to pre-existing tables."""
     conn = get_conn()
     try:
         with conn.cursor() as cur:
