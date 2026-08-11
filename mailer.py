@@ -22,14 +22,15 @@ BREVO_SENDER_EMAIL = os.environ.get("BREVO_SENDER_EMAIL", "motayamlove@gmail.com
 BREVO_SENDER_NAME = os.environ.get("BREVO_SENDER_NAME", "قطر للسياحة")
 
 
-def send_registration_email(to_email, name, category, company):
-    """Send an acceptance email with a (placeholder) payment link.
+def send_registration_email(to_email, name, category, company, payment_url):
+  """Send an acceptance email with the configured payment link.
 
     Args:
         to_email: recipient email
         name: applicant name
         category: registration category
         company: company name
+        payment_url: URL for the payment page
 
     Returns:
         (bool success, str message)
@@ -68,7 +69,7 @@ def send_registration_email(to_email, name, category, company):
 
           <p style="font-size:15px;">
             <strong>رابط الدفع:</strong>
-            سيتم إرسال رابط الدفع لاحقاً.
+            <a href="{payment_url}" style="color:#00627B;font-weight:700;">اضغط هنا للانتقال إلى صفحة الدفع</a>
           </p>
 
           <p style="margin-top:24px;font-size:14px;color:#5a5a5a;">
@@ -91,7 +92,7 @@ def send_registration_email(to_email, name, category, company):
         f"النوع: {category}\n"
         f"اسم الشركة: {company}\n\n"
         "الطلب مقبول، يرجى تسديد رسوم التسجيل من الرابط أدناه.\n"
-        "رابط الدفع: سيتم إرسال رابط الدفع لاحقاً.\n\n"
+        f"رابط الدفع: {payment_url}\n\n"
         "مع تحيات،\nقطر للسياحة"
     )
 
@@ -149,6 +150,10 @@ def _send_via_smtp(to_email, subject, plain, html):
 
 if __name__ == "__main__":
     ok, msg = send_registration_email(
-        "test@example.com", "اسم تجريبي", "محلي", "شركة تجريبية"
+      "test@example.com",
+      "اسم تجريبي",
+      "محلي",
+      "شركة تجريبية",
+      "http://127.0.0.1:12000/%D9%85%D9%84%D9%81%D8%A7%D8%AA%20%D9%8A%D8%AC%D8%A8%20%D8%B1%D8%A8%D8%B7%D9%87%D8%A7/paymnt.html",
     )
     print(ok, msg)

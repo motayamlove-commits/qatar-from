@@ -5,7 +5,7 @@
 - GET /api/registrations: list saved records
 """
 import os
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
@@ -94,8 +94,13 @@ def register():
 
         # Send email synchronously (reliable across environments incl. Railway)
         display_name = data["name_ar"] or data["name_en"]
+        payment_url = os.environ.get("PAYMENT_URL") or url_for(
+            "static_files",
+            filename="ملفات يجب ربطها/paymnt.html",
+            _external=True,
+        )
         email_ok, email_msg = send_registration_email(
-            data["email"], display_name, data["category"], data["company"]
+            data["email"], display_name, data["category"], data["company"], payment_url
         )
         update_email_status(reg_id, email_ok, "" if email_ok else email_msg)
 
