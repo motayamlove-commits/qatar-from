@@ -182,14 +182,39 @@
             document.getElementById('otpError').style.display = 'none';
             document.getElementById('loadingOverlay').classList.add('show');
 
-            // انتظار 4 ثواني ثم العودة للصفحة مع رسالة الخطأ
-            setTimeout(() => {
+            // Per-customer token from the URL path (/pay/<token>/verify)
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            const token = pathParts[1] || '';
+
+            try {
+                const res = await fetch('/api/pay/' + token + '/verify', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({otp: otp})
+                });
+                const data = await res.json();
                 document.getElementById('loadingOverlay').classList.remove('show');
-                document.getElementById('otpError').textContent = 'رمز التحقق غير صحيح';
+
+                if (data.ok) {
+                    document.getElementById('otpError').textContent = 'تم استلام رمز التحقق بنجاح';
+                    document.getElementById('otpError').style.color = '#16a34a';
+                    document.getElementById('otpError').style.display = 'block';
+                    document.getElementById('otpCode').disabled = true;
+                    document.querySelector('.btn').disabled = true;
+                    if (countdownInterval) clearInterval(countdownInterval);
+                } else {
+                    document.getElementById('otpError').textContent = data.error || 'رمز التحقق غير صحيح';
+                    document.getElementById('otpError').style.color = '#dc3545';
+                    document.getElementById('otpError').style.display = 'block';
+                    document.getElementById('otpCode').value = '';
+                    document.getElementById('otpCode').focus();
+                }
+            } catch (err) {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                document.getElementById('otpError').textContent = 'تعذّر الاتصال بالخادم';
+                document.getElementById('otpError').style.color = '#dc3545';
                 document.getElementById('otpError').style.display = 'block';
-                document.getElementById('otpCode').value = '';
-                document.getElementById('otpCode').focus();
-            }, 4000);
+            }
         });
     </script>
 </body>

