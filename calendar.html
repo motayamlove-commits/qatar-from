@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رزنامة الفعاليات | قطر للسياحة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="qntc-header" id="top">
+    <div class="qntc-header__topbar">
+      <div class="container qntc-header__topbar-inner">
+        <a href="index.html" class="qntc-header__logo">
+          <img src="assets/logo-qatar-tourism.svg" alt="VisitQatar" class="logo-dark" />
+          <img src="assets/logo-qatar-tourism-white.svg" alt="VisitQatar" class="logo-light" />
+          <span class="qntc-header__logo-text">الصفحة الرئيسية لموقع VisitQatar</span>
+        </a>
+        <a href="#" class="qntc-header__visitqatar">زوروا قطر</a>
+        <div class="qntc-header__lang">
+          <button class="lang-btn"><span class="lang-btn__code">ar</span><span class="lang-btn__name">Arabic</span></button>
+        </div>
+        <button class="qntc-header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <nav class="qntc-nav" id="mainNav">
+      <ul class="qntc-nav__list">
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">الترخيص والخدمات الإلكترونية</a></li>
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">الأخبار ووسائل الإعلام</a></li>
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">تجارة السفر</a></li>
+        <li class="qntc-nav__item is-active"><a class="qntc-nav__link" href="business-events.html">فعاليات الأعمال</a></li>
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">جائزة قطر للسياحة</a></li>
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">الشراكات بين القطاعين العام والخاص</a></li>
+        <li class="qntc-nav__item"><a class="qntc-nav__link" href="#">مذاق قطر</a></li>
+      </ul>
+      <button class="qntc-nav__search" id="searchBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>بحث</span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <div class="page-hero__bg"><img src="assets/grid-qnl.jpg" alt="" /></div>
+    <div class="container page-hero__content">
+      <h1 class="page-hero__title">رزنامة الفعاليات</h1>
+      <p class="page-hero__sub">استكشف الفرص وتواصل مع قادة الصناعة وكن في الطليعة من خلال رزنامتنا الشاملة لفعاليات الأعمال.</p>
+    </div>
+  </section>
+
+  <nav class="breadcrumb container">
+    <a href="index.html">فعاليات الأعمال</a>
+    <span class="breadcrumb__sep">/</span>
+    <span>رزنامة الفعاليات</span>
+  </nav>
+
+  <main class="container main-content">
+    <div class="calendar-filters">
+      <select aria-label="الشهر">
+        <option>كل الأشهر</option><option>يناير</option><option>فبراير</option><option>مارس</option>
+      </select>
+      <select aria-label="الفئة">
+        <option>كل الفئات</option><option>معارض</option><option>مؤتمرات</option><option>مهرجانات</option>
+      </select>
+      <input type="search" placeholder="ابحث عن فعالية" aria-label="بحث" />
+      <button class="filter-btn">تصفية</button>
+    </div>
+
+    <div class="events-list">
+      <a class="event-card" href="index.html">
+        <div class="event-card__img"><img src="assets/hero-banner.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">13 - 23 يناير 2027</div>
+          <h3 class="event-card__title">مهرجان قطر الدولي للأغذية</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            ساحة استاد لوسيل
+          </div>
+          <span class="event-card__free">الدخول مجاني</span>
+        </div>
+      </a>
+      <a class="event-card" href="#">
+        <div class="event-card__img"><img src="assets/qncc-sec-1.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">5 - 8 فبراير 2027</div>
+          <h3 class="event-card__title">معرض الدوحة الدولي للكتاب</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            مركز قطر الوطني للمؤتمرات
+          </div>
+          <span class="event-card__free">الدخول مجاني</span>
+        </div>
+      </a>
+      <a class="event-card" href="#">
+        <div class="event-card__img"><img src="assets/doha-skyline.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">15 - 17 مارس 2027</div>
+          <h3 class="event-card__title">مؤتمر قطر للقيادة</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            الدوحة
+          </div>
+        </div>
+      </a>
+      <a class="event-card" href="#">
+        <div class="event-card__img"><img src="assets/airport-jet.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">20 - 22 أبريل 2027</div>
+          <h3 class="event-card__title">معرض السفر الدولي</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            مركز الدوحة للمعارض
+          </div>
+        </div>
+      </a>
+      <a class="event-card" href="#">
+        <div class="event-card__img"><img src="assets/qiff13.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">10 - 12 مايو 2027</div>
+          <h3 class="event-card__title">مهرجان المأكولات العالمي</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            الوكرة
+          </div>
+          <span class="event-card__free">الدخول مجاني</span>
+        </div>
+      </a>
+      <a class="event-card" href="#">
+        <div class="event-card__img"><img src="assets/grid-qnl.jpg" alt="" /></div>
+        <div class="event-card__body">
+          <div class="event-card__date">1 - 3 يونيو 2027</div>
+          <h3 class="event-card__title">مؤتمر المكتبة الوطنية</h3>
+          <div class="event-card__loc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+            مكتبة قطر الوطنية
+          </div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="qntc-footer">
+    <div class="container qntc-footer__top">
+      <div class="qntc-footer__brand"><img src="assets/logo-qatar-tourism-white.svg" alt="قطر للسياحة" /></div>
+      <div class="qntc-footer__cols">
+        <div class="qntc-footer__col">
+          <h4>تابعنا</h4>
+          <ul><li><a href="#">LinkedIn</a></li><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">X</a></li><li><a href="#">YouTube</a></li></ul>
+        </div>
+        <div class="qntc-footer__col">
+          <h4>الاتصال</h4>
+          <ul><li><a href="#">تواصل معنا</a></li><li><a href="#">الإعلام والصحافة</a></li><li><a href="#">منظِّمو الرحلات</a></li></ul>
+        </div>
+        <div class="qntc-footer__col">
+          <h4>معلومات</h4>
+          <ul><li><a href="#">نبذة عن قطر للسياحة</a></li><li><a href="#">Visitqatar.com</a></li><li><a href="#">سياسة الخصوصية والأمن</a></li><li><a href="#">سياسة ملفات تعريف الارتباط</a></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="container qntc-footer__bottom">
+      <p>حقوق الطبع والنشر © لعام 2026 محفوظة لقطر للسياحة | جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
+
+  <a href="#top" class="back-to-top" aria-label="العودة للأعلى">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <script src="script.js"></script>
+</body>
+</html>

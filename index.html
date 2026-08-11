@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مهرجان قطر الدولي للأغذية | قطر للسياحة</title>
+  <meta name="description" content="مهرجان قطر الدولي للأغذية هو مبادرة قطرية أطلقتها Visit Qatar احتفاءً بالعروض المتنوعة التي تقدمها قطر في قطاعات الأطعمة، والمشروبات، والضيافة." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Top notice bar -->
+  <div class="app-banner" id="appBanner">
+    <div class="app-banner__inner">
+      <div class="app-banner__brand">
+        <img src="assets/appicon.png" alt="تطبيق زوروا قطر" onerror="this.style.display='none'" />
+      </div>
+      <div class="app-banner__text">
+        <strong>تطبيق زوروا قطر</strong>
+        <span>استكشف الأنشطة في قطر. حمّل الأن</span>
+      </div>
+    </div>
+    <button class="app-banner__close" id="appBannerClose" aria-label="إغلاق الإشعارات">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header class="qntc-header" id="top">
+    <div class="qntc-header__topbar">
+      <div class="container qntc-header__topbar-inner">
+        <a href="index.html" class="qntc-header__logo" aria-label="الصفحة الرئيسية لموقع VisitQatar">
+          <img src="assets/logo-qatar-tourism.svg" alt="الصفحة الرئيسية لموقع VisitQatar" class="logo-dark" />
+          <img src="assets/logo-qatar-tourism-white.svg" alt="الصفحة الرئيسية لموقع VisitQatar" class="logo-light" />
+          <span class="qntc-header__logo-text">الصفحة الرئيسية لموقع VisitQatar</span>
+        </a>
+
+        <a href="#" class="qntc-header__visitqatar">زوروا قطر</a>
+
+        <div class="qntc-header__lang">
+          <button class="lang-btn" aria-label="تغيير اللغة">
+            <span class="lang-btn__code">ar</span>
+            <span class="lang-btn__name">Arabic</span>
+          </button>
+        </div>
+
+        <button class="qntc-header__burger" id="burgerBtn" aria-label="القائمة">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="qntc-nav" id="mainNav">
+      <ul class="qntc-nav__list">
+        <li class="qntc-nav__item has-mega">
+          <button class="qntc-nav__link">الترخيص والخدمات الإلكترونية</button>
+          <div class="mega-menu">
+            <div class="container mega-menu__grid">
+              <a class="mega-card" href="#">
+                <div class="mega-card__img"><img src="assets/dsc-9813.jpg" alt="" onerror="this.parentElement.style.display='none'"></div>
+                <div class="mega-card__body">
+                  <h3>الترخيص والخدمات الإلكترونية</h3>
+                  <p>استمتع معنا بتجربة التراخيص والخدمات الإلكترونية السلسة، حيث تجتمع المرونة مع التميز لتقديم الخدمات الإدارية في قطاع السياحة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>الخدمات الإلكترونية</h3>
+                  <p>تتيح الخدمات الإلكترونية للشركات، والجهات المنظمة للفعاليات، والفنادق، وغيرها الاستفادة من الخدمات ذات الصلة من خلال اتباع بضع خطوات بسيطة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>قطر نظيفة</h3>
+                  <p>برنامج قطر نظيفة هي مبادرة تم إطلاقها لضمان تحقيق أقصى قدر من السلامة لكل المسافرين والمقيمين من حيث النظافة واتباع القواعد الصحية.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>التشريعات</h3>
+                  <p>ابقَ على اطلاع بأحدث التعاميم، والقوانين الرئيسية، والسياسات، والتحديثات التشريعية الصادرة عن المجلس الوطني للسياحة في قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>استثمر في قطر</h3>
+                  <p>قطر مركز مالي عالمي تزدهر فيه الشركات. قم بإنشاء مشروعك وتأسيس عملك في قطر لتحقيق نمو لا مثيل له والحصول على فرص لا نهاية لها.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>أكاديمية التميّز في الخدمة</h3>
+                  <p>اكتشف أسرار التميز في الخدمة في أكاديمية التميّز في الخدمة للمتخصصين في قطاع السياحة التابعة لقطر للسياحة. طوّر مهاراتك واضمن ثقة عملائك.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>تدريب خبراء الشاطئ</h3>
+                  <p>سواء كنت خبيراً في السفر، أو محترفاً في مجال الضيافة، أو ببساطة كنت شخصاً يحب استكشاف وجهات جديدة، فإن هذا التدريب خيار مثالي لك. احصل على معلومات قيمة حول شواطئ قطر المذهلة وكن خبيراً شاطئياً. ابدأ رحلتك اليوم واكتشف الجواهر الخفية في سواحل قطر!</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>تجربة قطر</h3>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="qntc-nav__item has-mega">
+          <button class="qntc-nav__link">الأخبار ووسائل الإعلام</button>
+          <div class="mega-menu">
+            <div class="container mega-menu__grid">
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>الأخبار ووسائل الإعلام</h3>
+                  <p>لا تفوّت آخر أخبار قطاع السياحة في قطر من خلال مركز الأخبار والإعلام الخاص بنا، حيث تجد مجموعة من المقالات والتقارير السياحية وغيرها المزيد.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>مجموعة الأدوات الإعلامية</h3>
+                  <p>تجد هنا كل ما تحتاجه من التصاميم الجذابة والموارد الرائعة لصياغة قصص مقنعة ونقل تجارب تحفز المسافرين.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>إحصاءات السياحة في قطر</h3>
+                  <p>انضم إلينا لاستكشاف طبيعة المشهد السياحي في قطر، وتعرّف على الرؤى والاتجاهات والتحليلات المستندة إلى البيانات التي تشكل مستقبل الصناعة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>بيانات صحفية</h3>
+                  <p>اطلع على أخبار المشهد السياحي النابض بالحياة في قطر من خلال بياناتنا الصحفية. استكشف آخر الأخبار والتحديثات للتعرف على معالم قطر وثقافتها.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>جدول الرحلات البحرية 2023</h3>
+                  <p>استكشف جدول موسم الرحلات البحرية لعام 2023 وكن على اطلاعٍ دائم بأحدث المستجدات والمعلومات.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="qntc-nav__item has-mega">
+          <button class="qntc-nav__link">تجارة السفر</button>
+          <div class="mega-menu">
+            <div class="container mega-menu__grid">
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>تجارة السفر</h3>
+                  <p>يمكنك تعزيز أعمال السفر الخاصة بك من خلال منصة تجارة السفر من قطر للسياحة. تحتوي المنصة على رؤى مفيدة ومجموعة متنوعة من الموارد الحصرية.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>رزنامة الفعاليات التجارية</h3>
+                  <p>اكتشف الفعاليات التجارية الدولية مع قطر للسياحة. تابع رزنامة الفعاليات الخاصة بنا، وترقّب فرصاً واعدة!</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>موارد المبيعات</h3>
+                  <p>استكشف أفضل ما تقدمه قطر في مجال السفر بفضل موارد المبيعات للمحترفين. ارتقِ بمستوى خدماتك وقدّم تجارب لا تُنسى.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>المكاتب الخارجية لقطر للسياحة</h3>
+                  <p>تواصل مع شبكتنا الدولية المخصصة للترويج لثقافة قطر الغنية وعروضها السياحية في جميع أنحاء العالم.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>برنامج "مختص في قطر"</h3>
+                  <p>اصقل خبرتك في السفر إلى قطر من خلال برنامجنا المتخصص في قطر. طوّر المزيد من المعارف وارفع مستوى مهاراتك التجارية في مجال السفر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>روِّج لباقات السفر معنا</h3>
+                  <p>استفد من الترويج لباقاتك وعروضك على منصة قطر للسياحة للعروض الترويجية الحصرية وعزّز إمكانات التسويق لديك.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>منظِّمو الرحلات</h3>
+                  <p>إذا كنت من منظمي الرحلات السياحية وترغب في معرفة المزيد عن قطر، فابدأ من هنا.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>مرافق الرعاية الصحية</h3>
+                  <p>هل أنت من مقدمي خدمات الرعاية الصحية في قطر؟ شارك بياناتك معنا لإدراجها على موقعنا حتى تصل إلى أكبر عدد من السياح والمقيمين على حد سواء.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>مجموعة أدوات الفنادق والشركات السياحية</h3>
+                  <p>تتضمن مجموعة المواد الصحفية لدى قطر للسياحة صوراً، ومقاطع فيديو، ونشرات معلومات، وأسئلة وأجوبة تعرض ما تقدمه قطر كوجهة سياحية من عروض وتجارب.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>أدلة مجموعة أدوات "أكثر من شعور"</h3>
+                  <p>استفد من مجموعة أدوات حملتنا العالمية "أكثر من شعور" لتعريف عملائك بالتجارب الفريدة في قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>خبراء الوجهات</h3>
+                  <p>بادر بحجز مغامرة أحلامك في قطر بمساعدة أحد خبراء السفر المحليين. اقرأ المزيد</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="qntc-nav__item has-mega is-active">
+          <button class="qntc-nav__link">فعاليات الأعمال</button>
+          <div class="mega-menu">
+            <div class="container mega-menu__grid">
+              <a class="mega-card" href="business-events.html">
+                <div class="mega-card__body">
+                  <h3>فعاليات الأعمال</h3>
+                  <p>تعمل البنية التحتية والخدمات رفيعة المستوى في قطر على ترسيخ مكانة الدولة كمركز رئيسي لقطاع فعاليات الأعمال العالمية.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="calendar.html">
+                <div class="mega-card__body">
+                  <h3>رزنامة الفعاليات</h3>
+                  <p>استكشف الفرص وتواصل مع قادة الصناعة وكن في الطليعة من خلال رزنامتنا الشاملة لفعاليات الأعمال.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>لماذا تُعد قطر الوجهة المثالية</h3>
+                  <p>فيما يلي بعض الأسباب المقنعة التي تجعل من قطر الوجهة الأفضل لتنظيم اجتماعات الأعمال والشركات. خطط لفعالياتك بثقة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>خطط لفعاليتك</h3>
+                  <p>اصنع تجارب لا تُنسى مع فعاليات الأعمال التي تنظمها قطر للسياحة. خطط لفعاليتك القادمة بدقة وفخامة في كل التفاصيل في دولة قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>اعرض فعالياتك</h3>
+                  <p>يمكنك نشر فعالياتك وعروضك ومهرجاناتك على منصة قطر الشاملة التي تجمع كل الفعاليات والمهرجانات وغيرها الكثير.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>رابط واجهة رزنامة قطر</h3>
+                  <p>أدرج قائمة قطر الشاملة لجميع الفعاليات والمهرجانات والمعارض وغيرها المزيد من الأنشطة على موقعك الإلكتروني من خلال ودجة رزنامة قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>منصة البحث عن مواقع الفعاليات</h3>
+                  <p>اعثر على المكان المثالي لفعالية أعمالك القادمة عبر منصة البحث عن الوجهات من Visit Qatar، وارتقِ بفعالياتك في أرقى المواقع والمساحات الاستثنائية في قطر.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="qntc-nav__item has-mega">
+          <button class="qntc-nav__link">جائزة قطر للسياحة</button>
+          <div class="mega-menu">
+            <div class="container mega-menu__grid">
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>جائزة قطر للسياحة</h3>
+                  <p>قدّم طلبك واعرض مساهمتك في قطاع السياحة المزدهر في قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>فئات الجوائز</h3>
+                  <p>تغطي فئات جائزة قطر للسياحة المجالات الهامة التي تعزز تجربة السفر في قطر.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>معايير الجائزة</h3>
+                  <p>تعرف على تفاصيل معايير اختيار الفائزين بجائزة قطر للسياحة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>تعرّف على لجنة التحكيم</h3>
+                  <p>تعرّف على أعضاء لجنة تحكيم جائزة قطر للسياحة الموقرين</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>تواصل معنا</h3>
+                  <p>هل لديك أية أسئلة؟ تواصل مع أحد أعضاء الفريق – سيكونون سعيدين بمساعدتك.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>ملتقى الفائزين بجائزة قطر للسياحة</h3>
+                  <p>ملتقى الفائزين بجائزة قطر للسياحة هو نادٍ حصري يجمع الفائزين في كل نسخة من جوائز قطر للسياحة.</p>
+                </div>
+              </a>
+              <a class="mega-card" href="#">
+                <div class="mega-card__body">
+                  <h3>الفائزون بالجائزة في 2025</h3>
+                  <p>لقد رفعوا عالياً معايير الفوز بالجائزة. تهانينا للفائزين في جائزة قطر للسياحة للعام 2025.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="qntc-nav__item">
+          <a class="qntc-nav__link" href="#">الشراكات بين القطاعين العام والخاص</a>
+        </li>
+        <li class="qntc-nav__item">
+          <a class="qntc-nav__link" href="#">مذاق قطر</a>
+        </li>
+      </ul>
+      <button class="qntc-nav__search" id="searchBtn" aria-label="بحث">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>بحث</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-overlay__box">
+      <input type="search" placeholder="بحث" aria-label="بحث" />
+      <button class="search-overlay__close" id="searchClose" aria-label="إغلاق البحث">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg">
+      <img src="assets/hero-banner.jpg" alt="مهرجان قطر الدولي للأغذية" />
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="container hero__content">
+      <span class="hero__share" id="shareBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" stroke="currentColor" stroke-width="2"/></svg>
+        شارك هذه الصفحة
+      </span>
+      <h1 class="hero__title">مهرجان قطر الدولي للأغذية</h1>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb container" aria-label="مسار التنقل">
+    <a href="index.html">فعاليات الأعمال</a>
+    <span class="breadcrumb__sep">/</span>
+    <a href="calendar.html">رزنامة الفعاليات</a>
+    <span class="breadcrumb__sep">/</span>
+    <span>مهرجان قطر الدولي للأغذية</span>
+  </nav>
+
+  <main class="container main-content">
+    <div class="event-intro">
+      <p>مهرجان قطر الدولي للأغذية هو مبادرة قطرية أطلقتها Visit Qatar احتفاءً بالعروض المتنوعة التي تقدمها قطر في قطاعات الأطعمة، والمشروبات، والضيافة.</p>
+    </div>
+
+    <!-- Event details -->
+    <section class="event-details">
+      <h2 class="section-title">تفاصيل الفعالية</h2>
+      <div class="event-details__grid">
+        <div class="event-detail">
+          <span class="event-detail__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="event-detail__label">13 - 23 يناير 2027</span>
+        </div>
+        <div class="event-detail">
+          <span class="event-detail__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+          </span>
+          <span class="event-detail__label">ساحة استاد لوسيل</span>
+        </div>
+        <div class="event-detail">
+          <span class="event-detail__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15l-4.8 2.6.9-5.4L4.2 7.7l5.4-.8L12 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="event-detail__label">الدخول مجاني</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration form -->
+    <section class="reg-section">
+      <h2 class="section-title">التسجيل للحصول على الأكشاك في مهرجان قطر الدولي للأغذية 2027</h2>
+      <form class="reg-form" id="regForm" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label>الاسم باللغة الإنجليزية <span class="req">*</span></label>
+            <input type="text" name="name_en" required />
+          </div>
+          <div class="form-field">
+            <label>الاسم باللغة العربية <span class="req">*</span></label>
+            <input type="text" name="name_ar" required dir="rtl" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>الفئة <span class="req">*</span></label>
+            <select name="category" required>
+              <option value="" disabled selected>اختر الفئة</option>
+              <option>عمل من المنزل</option>
+              <option>محلي</option>
+              <option>دولي</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>إذا كان دولياً، حدد البلد</label>
+            <input type="text" name="country" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>اسم الشركة <span class="req">*</span></label>
+            <input type="text" name="company" required />
+          </div>
+          <div class="form-field">
+            <label>جهة الاتصال <span class="req">*</span></label>
+            <input type="text" name="contact" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>رقم الجوال <span class="req">*</span></label>
+            <input type="tel" name="phone" required />
+          </div>
+          <div class="form-field">
+            <label>البريد الإلكتروني <span class="req">*</span></label>
+            <input type="email" name="email" required />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>السجل التجاري والشهادة الصحية <span class="req">*</span></label>
+          <div class="file-upload">
+            <input type="file" name="docs" accept=".png,.jpg,.pdf" />
+            <span class="file-upload__hint">يجب أن يكون حجم الملف أقل من 10 ميجابايت. أنواع الملفات المسموح بها: PNG JPG PDF</span>
+            <span class="file-upload__btn">تصفّح</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>الاسم على مواقع التواصل الاجتماعي <span class="req">*</span></label>
+            <input type="text" name="social" required />
+          </div>
+          <div class="form-field">
+            <label>المأكولات <span class="req">*</span></label>
+            <input type="text" name="cuisine" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>المساحة المفضلة للكشك</label>
+            <select name="size">
+              <option value="3x3">3x3</option>
+              <option value="4x4">4x4</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>حجم العربة</label>
+            <input type="text" name="cart_size" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>صورة العربة</label>
+          <div class="file-upload">
+            <input type="file" name="cart_image" accept=".jpg,.png" />
+            <span class="file-upload__hint">يجب أن يكون حجم الملف أقل من 10 ميجابايت. أنواع الملفات المسموح بها: JPG PNG</span>
+            <span class="file-upload__btn">تصفّح</span>
+          </div>
+        </div>
+
+        <button type="submit" class="reg-submit">متابعة</button>
+        <p class="form-success" id="formSuccess" hidden>تم استلام طلبك بنجاح. سنتواصل معك قريباً.</p>
+      </form>
+    </section>
+
+    <!-- Description -->
+    <section class="event-desc">
+      <p>يعد مهرجان قطر الدولي للأغذية أكبر فعالية تحتفي بفنون الطهي على مستوى الدولة، وتقدم خلال المهرجان ورش عمل متنوعة وأنشطة ترفيهية يومية لجميع أفراد الأسرة، جنباً إلى جنب مع دروس حية مباشرة في الطهو يقدمها طهاة حائزون على جوائز.</p>
+    </section>
+  </main>
+
+  <!-- Gallery -->
+  <section class="gallery">
+    <div class="container">
+      <div class="gallery__slider" id="gallerySlider">
+        <div class="gallery__track" id="galleryTrack">
+          <div class="gallery__slide"><img src="assets/qiff1.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+          <div class="gallery__slide"><img src="assets/qiff9.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+          <div class="gallery__slide"><img src="assets/qiff8.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+          <div class="gallery__slide"><img src="assets/qiff20.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+          <div class="gallery__slide"><img src="assets/qiff13.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+          <div class="gallery__slide"><img src="assets/qiff21.jpg" alt="مهرجان قطر الدولي للأغذية" /></div>
+        </div>
+        <button class="gallery__nav gallery__nav--prev" id="galleryPrev" aria-label="السابق">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="gallery__nav gallery__nav--next" id="galleryNext" aria-label="التالي">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="gallery__dots" id="galleryDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick access -->
+  <section class="quick-access container">
+    <h2 class="section-title">الوصول السريع</h2>
+    <div class="quick-access__grid">
+      <a class="quick-card" href="#">
+        <h3>نبذة عنّا</h3>
+        <span>اقرأ المزيد</span>
+      </a>
+      <a class="quick-card" href="#">
+        <h3>معالم الجذب البارزة</h3>
+        <span>اقرأ المزيد</span>
+      </a>
+      <a class="quick-card" href="#">
+        <h3>الخريطة</h3>
+        <span>اقرأ المزيد</span>
+      </a>
+      <a class="quick-card" href="#">
+        <h3>الفعاليات</h3>
+        <span>اقرأ المزيد</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="qntc-footer">
+    <div class="container qntc-footer__top">
+      <div class="qntc-footer__brand">
+        <img src="assets/logo-qatar-tourism-white.svg" alt="الصفحة الرئيسية لقطر للسياحة" />
+      </div>
+      <div class="qntc-footer__cols">
+        <div class="qntc-footer__col">
+          <h4>تابعنا</h4>
+          <ul>
+            <li><a href="https://www.linkedin.com/company/qatartourism" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://www.facebook.com/VisitQatar/" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="https://www.instagram.com/visitqatar/?hl=en" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://twitter.com/VisitQatar" target="_blank" rel="noopener">X</a></li>
+            <li><a href="https://www.youtube.com/user/QatarTourism" target="_blank" rel="noopener">YouTube</a></li>
+          </ul>
+        </div>
+        <div class="qntc-footer__col">
+          <h4>الاتصال</h4>
+          <ul>
+            <li><a href="#">تواصل معنا</a></li>
+            <li><a href="#">الإعلام والصحافة</a></li>
+            <li><a href="#">منظِّمو الرحلات</a></li>
+          </ul>
+        </div>
+        <div class="qntc-footer__col">
+          <h4>معلومات</h4>
+          <ul>
+            <li><a href="#">نبذة عن قطر للسياحة</a></li>
+            <li><a href="https://www.visitqatar.com" target="_blank" rel="noopener">Visitqatar.com</a></li>
+            <li><a href="#">سياسة الخصوصية والأمن</a></li>
+            <li><a href="#">سياسة ملفات تعريف الارتباط</a></li>
+            <li><a href="#">إعدادات ملفات تعريف الارتباط</a></li>
+            <li><a href="#">شعارات العلامة التجارية قطر للسياحة</a></li>
+            <li><a href="#">إعدادات ملفات تعريف الارتباط</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container qntc-footer__bottom">
+      <p>حقوق الطبع والنشر © لعام 2026 محفوظة لقطر للسياحة | جميع الحقوق محفوظة</p>
+      <img src="assets/logos-color.jpg" alt="" class="qntc-footer__logos" onerror="this.style.display='none'" />
+    </div>
+  </footer>
+
+  <!-- Cookie consent -->
+  <div class="cookie" id="cookie">
+    <div class="cookie__text">
+      <p>نستخدم ملفات تعريف الارتباط لتخصيص تجربتك وفق احتياجاتك، لنقدم لك عروضاً خاصة وميزات فريدة وأكثر من ذلك. عند اختيار "قبول الكل" فإنك توافق على استخدام ملفات تعريف الارتباط. يمكنك تغيير تفضيلاتك في أي وقت عبر رابط "موافقة ملفات تعريف الارتباط" في التذييل.</p>
+      <a href="#" class="cookie__link">سياسة الخصوصية</a>
+    </div>
+    <div class="cookie__btns">
+      <button class="cookie__btn cookie__btn--all" id="cookieAcceptAll">قبول الكل</button>
+      <button class="cookie__btn cookie__btn--necessary" id="cookieAcceptNecessary">قبول الضروري فقط</button>
+    </div>
+  </div>
+
+  <!-- Back to top -->
+  <a href="#top" class="back-to-top" aria-label="العودة للأعلى">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+
+  <script src="script.js"></script>
+</body>
+</html>
