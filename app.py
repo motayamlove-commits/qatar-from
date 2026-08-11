@@ -5,7 +5,6 @@
 - GET /api/registrations: list saved records
 """
 import os
-import threading
 from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
@@ -42,15 +41,6 @@ def save_upload(file_storage, prefix):
     path = os.path.join(UPLOAD_DIR, unique)
     file_storage.save(path)
     return unique
-
-
-def send_email_async(reg_id, email, name, category, company):
-    """Send confirmation email in a background thread so the request stays fast."""
-    try:
-        ok, msg = send_registration_email(email, name, category, company)
-        update_email_status(reg_id, ok, "" if ok else msg)
-    except Exception as e:
-        update_email_status(reg_id, False, f"استثناء: {e}")
 
 
 @app.route("/")

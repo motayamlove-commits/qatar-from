@@ -1,12 +1,19 @@
-"""Email sending via Brevo SMTP relay."""
+"""Email sending via Brevo REST API (HTTPS, works on Railway) with SMTP fallback."""
 import os
 import smtplib
+import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.utils import formatdate, make_msgid
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# REST API (preferred - works everywhere including Railway, uses HTTPS port 443)
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
+
+# SMTP fallback (for local testing only; blocked on Railway)
 BREVO_SMTP_KEY = os.environ.get("BREVO_SMTP_KEY", "")
 BREVO_SMTP_LOGIN = os.environ.get("BREVO_SMTP_LOGIN", "")
 BREVO_SMTP_SERVER = os.environ.get("BREVO_SMTP_SERVER", "smtp-relay.brevo.com")
@@ -88,8 +95,38 @@ def send_registration_email(to_email, name, category, company):
         "مع تحيات،\nقطر للسياحة"
     )
 
-    from email.utils import formatdate, make_msgid
+    # Prefer REST API (works on Railway); fall back to SMTP if no API key (local only).
+    if BREVO_API_KEY:
+        return _send_via_api(to_email, subject, plain, html)
+    return _send_via_smtp(to_email, subject, plain, html)
 
+
+def _send_via_api(to_email, subject, plain, html):
+    """Send via Brevo REST API (HTTPS port 443, not blocked on Railway)."""
+    payload = {
+        "sender": {"name": BREVO_SENDER_NAME, "email": BREVO_SENDER_EMAIL},
+        "to": [{"email": to_email}],
+        "replyTo": {"email": BREVO_SENDER_EMAIL},
+        "subject": subject,
+        "htmlContent": html,
+        "textContent": plain,
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "api-key": BREVO_API_KEY,
+    }
+    try:
+        resp = requests.post(BREVO_API_URL, json=payload, headers=headers, timeout=15)
+        if resp.status_code in (200, 201):
+            return True, "تم إرسال البريد بنجاح"
+        return False, f"API {resp.status_code}: {resp.text}"
+    except Exception as e:
+        return False, f"خطأ API: {e}"
+
+
+def _send_via_smtp(to_email, subject, plain, html):
+    """Send via Brevo SMTP relay (local fallback; port 587 is blocked on Railway)."""
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL}>"
@@ -107,7 +144,7 @@ def send_registration_email(to_email, name, category, company):
             server.sendmail(BREVO_SENDER_EMAIL, [to_email], msg.as_string())
         return True, "تم إرسال البريد بنجاح"
     except Exception as e:
-        return False, f"خطأ أثناء الإرسال: {e}"
+        return False, f"خطأ SMTP: {e}"
 
 
 if __name__ == "__main__":
