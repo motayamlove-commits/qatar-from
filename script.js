@@ -112,6 +112,31 @@ document.getElementById('regForm')?.addEventListener('submit', async (e) => {
   }
 });
 
+// Contact form submit -> POST /api/contact (sends a copy to the festival team)
+document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('.reg-submit');
+  const success = document.getElementById('contactSuccess');
+  if (!form.reportValidity()) return;
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الإرسال...';
+
+  try {
+    const resp = await fetch('/api/contact', { method: 'POST', body: new FormData(form) });
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || 'تعذر إرسال الرسالة');
+    form.reset();
+    if (success) success.hidden = false;
+  } catch (err) {
+    alert(err.message || 'تعذر الاتصال بالخادم');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
+});
+
 // Cookie consent
 const cookie = document.getElementById('cookie');
 if (cookie && !localStorage.getItem('cookieConsent')) {

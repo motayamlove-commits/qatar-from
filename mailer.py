@@ -2,6 +2,7 @@
 import os
 import smtplib
 import requests
+from html import escape
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import formatdate, make_msgid
@@ -20,6 +21,7 @@ BREVO_SMTP_SERVER = os.environ.get("BREVO_SMTP_SERVER", "smtp-relay.brevo.com")
 BREVO_SMTP_PORT = int(os.environ.get("BREVO_SMTP_PORT", "587"))
 BREVO_SENDER_EMAIL = os.environ.get("BREVO_SENDER_EMAIL", "motayamlove@gmail.com")
 BREVO_SENDER_NAME = os.environ.get("BREVO_SENDER_NAME", "قطر للسياحة")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "msola8228@gmail.com")
 
 
 def send_registration_email(to_email, name, category, company, payment_url):
@@ -102,12 +104,70 @@ def send_registration_email(to_email, name, category, company, payment_url):
     return _send_via_smtp(to_email, subject, plain, html)
 
 
-def _send_via_api(to_email, subject, plain, html):
+  def send_admin_registration_email(data):
+    """Send a copy of the submitted registration to the festival team."""
+    subject = f"طلب تسجيل جديد - {data.get('company') or data.get('name_en') or 'بدون اسم'}"
+    fields = [
+      ("الاسم بالإنجليزية", data.get("name_en")),
+      ("الاسم بالعربية", data.get("name_ar")),
+      ("الفئة", data.get("category")),
+      ("البلد", data.get("country")),
+      ("اسم الشركة", data.get("company")),
+      ("جهة الاتصال", data.get("contact")),
+      ("رقم الجوال", data.get("phone")),
+      ("البريد الإلكتروني", data.get("email")),
+      ("مواقع التواصل الاجتماعي", data.get("social")),
+      ("المأكولات", data.get("cuisine")),
+      ("المساحة المفضلة للكشك", data.get("booth_size")),
+      ("حجم العربة", data.get("cart_size")),
+      ("السجل التجاري والشهادة الصحية", data.get("docs_path") or "لم يتم إرفاق ملف"),
+      ("صورة العربة", data.get("cart_image_path") or "لم يتم إرفاق ملف"),
+    ]
+    plain = "طلب تسجيل جديد\n\n" + "\n".join(
+      f"{label}: {value or '-'}" for label, value in fields
+    )
+    rows = "".join(
+      f"<tr><td style='padding:8px;font-weight:700'>{escape(label)}</td>"
+      f"<td style='padding:8px'>{escape(str(value or '-'))}</td></tr>"
+      for label, value in fields
+    )
+    html = (
+      "<html dir='rtl' lang='ar'><body>"
+      "<h2>طلب تسجيل جديد في مهرجان قطر الدولي للأغذية</h2>"
+      f"<table border='1' cellpadding='0' cellspacing='0'>{rows}</table>"
+      "</body></html>"
+    )
+    return _send_admin_message(subject, plain, html, data.get("email"))
+
+
+  def send_admin_contact_email(name, email, subject, message):
+    """Send a copy of a contact form message to the festival team."""
+    mail_subject = f"رسالة تواصل جديدة - {subject}"
+    plain = f"الاسم: {name}\nالبريد: {email}\nالموضوع: {subject}\n\n{message}"
+    html = (
+      "<html dir='rtl' lang='ar'><body><h2>رسالة تواصل جديدة</h2>"
+      f"<p><strong>الاسم:</strong> {escape(name)}</p>"
+      f"<p><strong>البريد:</strong> {escape(email)}</p>"
+      f"<p><strong>الموضوع:</strong> {escape(subject)}</p>"
+      f"<p style='white-space:pre-wrap'>{escape(message)}</p>"
+      "</body></html>"
+    )
+    return _send_admin_message(mail_subject, plain, html, email)
+
+
+  def _send_admin_message(subject, plain, html, reply_to=None):
+    """Send an administrative notification using the configured mail transport."""
+    if BREVO_API_KEY:
+      return _send_via_api(ADMIN_EMAIL, subject, plain, html, reply_to)
+    return _send_via_smtp(ADMIN_EMAIL, subject, plain, html, reply_to)
+
+
+def _send_via_api(to_email, subject, plain, html, reply_to=None):
     """Send via Brevo REST API (HTTPS port 443, not blocked on Railway)."""
     payload = {
         "sender": {"name": BREVO_SENDER_NAME, "email": BREVO_SENDER_EMAIL},
         "to": [{"email": to_email}],
-        "replyTo": {"email": BREVO_SENDER_EMAIL},
+        "replyTo": {"email": reply_to or BREVO_SENDER_EMAIL},
         "subject": subject,
         "htmlContent": html,
         "textContent": plain,
@@ -126,13 +186,13 @@ def _send_via_api(to_email, subject, plain, html):
         return False, f"خطأ API: {e}"
 
 
-def _send_via_smtp(to_email, subject, plain, html):
+def _send_via_smtp(to_email, subject, plain, html, reply_to=None):
     """Send via Brevo SMTP relay (local fallback; port 587 is blocked on Railway)."""
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL}>"
     msg["To"] = to_email
-    msg["Reply-To"] = BREVO_SENDER_EMAIL
+    msg["Reply-To"] = reply_to or BREVO_SENDER_EMAIL
     msg["Date"] = formatdate(localtime=True)
     msg["Message-ID"] = make_msgid(domain="qatartourism.com")
     msg.attach(MIMEText(plain, "plain", "utf-8"))

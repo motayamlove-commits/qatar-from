@@ -19,7 +19,7 @@ from db import (
     get_payment_token,
     increment_payment_attempt,
 )
-from mailer import send_registration_email
+from mailer import send_registration_email, send_admin_registration_email, send_admin_contact_email
 
 load_dotenv()
 
@@ -141,15 +141,36 @@ def register():
         email_ok, email_msg = send_registration_email(
             data["email"], display_name, data["category"], data["company"], payment_url
         )
+        admin_email_ok, admin_email_msg = send_admin_registration_email(data)
         update_email_status(reg_id, email_ok, "" if email_ok else email_msg)
 
         return jsonify({
             "ok": True,
             "id": reg_id,
             "email_sent": email_ok,
+            "admin_email_sent": admin_email_ok,
             "message": "تم استلام طلبك بنجاح. سيصلك بريد التأكيد خلال لحظات.",
         })
 
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
+
+
+@app.route("/api/contact", methods=["POST"])
+def contact():
+    try:
+        form = request.form
+        name = (form.get("name") or "").strip()
+        email = (form.get("email") or "").strip()
+        subject = (form.get("subject") or "").strip()
+        message = (form.get("message") or "").strip()
+        if not all((name, email, subject, message)):
+            return jsonify({"ok": False, "error": "يرجى تعبئة جميع الحقول المطلوبة"}), 400
+
+        email_ok, email_msg = send_admin_contact_email(name, email, subject, message)
+        if not email_ok:
+            return jsonify({"ok": False, "error": email_msg}), 502
+        return jsonify({"ok": True, "message": "تم إرسال رسالتك بنجاح"})
     except Exception as e:
         return jsonify({"ok": False, "error": f"خطأ في الخادم: {e}"}), 500
 
